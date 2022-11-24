@@ -1,28 +1,38 @@
-import styled from 'styled-components/native'
 import {useState} from "react";
-import {Cam} from "./src/modules/privateKeyGenerator/Cam";
 import {UIButton} from "./src/components/UI/UIButton";
-import {Grid} from "./src/modules/privateKeyGenerator/Grid";
+import {StyleSheet, View, ViewStyle} from "react-native";
+import {ThemeColors} from "./src/styles/themeColors";
+import {Cam} from "./src/modules/privateKeyGenerator/components/Cam";
 
 const App = () => {
-    const [open, setOpen] = useState<boolean>(false)
+    const [status, setStatus] = useState<"new" | "import" | "option">("option")
 
     return (
-        <Container>
-            {/*<Grid level={4}/>*/}
-            {open && <Cam/>}
-            <UIButton bgColor={"yellow"}
-                      onClick={() => setOpen(open => !open)}>{open ? "Go Back" : "Create Private Key"}</UIButton>
-        </Container>
+        <View style={Styles.container}>
+            {status === "new" && <Cam/>}
+            {
+                (status!=="option")?<UIButton bgColor={ThemeColors.secondary}
+                                              onClick={() => setStatus("option")}>Go Back</UIButton>:<>
+                    <UIButton bgColor={ThemeColors.secondary}
+                              onClick={() => setStatus("new")}>New Private Key</UIButton>
+                    <UIButton bgColor={ThemeColors.secondary}
+                              onClick={() => setStatus("import")}>Import Private Key</UIButton>
+                </>
+            }
+        </View>
     );
 }
-const Container = styled.View`
-  background: black;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`
+
+
+const Styles = StyleSheet.create<{
+container: ViewStyle
+}>({
+container: {
+    flex: 1,
+        justifyContent: "center",
+        backgroundColor: ThemeColors.background
+}
+});
+
 
 export default App

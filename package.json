@@ -1,13 +1,17 @@
 {
+  "version": "1.0.0",
+  "private": true,
+  "name": "crypto-wallet",
   "dependencies": {
     "@types/styled-components": "^5.1.26",
     "expo": "^47.0.0",
+    "expo-camera": "~13.1.0",
     "react": "18.1.0",
     "react-dom": "18.1.0",
     "react-native": "0.70.5",
     "react-native-web": "~0.18.7",
-    "styled-components": "^5.3.6",
-    "expo-camera": "~13.0.0"
+    "expo-file-system": "~15.1.1",
+    "expo-crypto": "~12.0.0"
   },
   "devDependencies": {
     "@babel/core": "^7.19.3",
@@ -20,8 +24,5 @@
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web"
-  },
-  "version": "1.0.0",
-  "private": true,
-  "name": "testrn"
+  }
 }
