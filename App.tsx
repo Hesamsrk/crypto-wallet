@@ -1,18 +1,28 @@
-import { StyleSheet, Text, View } from 'react-native';
+import styled from 'styled-components/native'
+import {useState} from "react";
+import {Cam} from "./src/modules/privateKeyGenerator/Cam";
+import {UIButton} from "./src/components/UI/UIButton";
+import {Grid} from "./src/modules/privateKeyGenerator/Grid";
 
-export default function App() {
-  return (
-    <View style={styles.container}>
-      <Text>Open up App.tsx to start working on your app!</Text>
-    </View>
-  );
+const App = () => {
+    const [open, setOpen] = useState<boolean>(false)
+
+    return (
+        <Container>
+            {/*<Grid level={4}/>*/}
+            {open && <Cam/>}
+            <UIButton bgColor={"yellow"}
+                      onClick={() => setOpen(open => !open)}>{open ? "Go Back" : "Create Private Key"}</UIButton>
+        </Container>
+    );
 }
+const Container = styled.View`
+  background: black;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+export default App
