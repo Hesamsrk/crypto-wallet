@@ -1,9 +1,16 @@
 import * as FileSystem from 'expo-file-system';
 import * as Crypto from 'expo-crypto';
 import {CryptoDigestAlgorithm, CryptoEncoding} from 'expo-crypto';
+import * as MediaLibrary from 'expo-media-library';
 
+export const saveImage = async (fileUri: string) => {
+    const { status } = await MediaLibrary.getPermissionsAsync();
+    if (status === "granted") {
+        const res = await MediaLibrary.getAlbumAsync("Camera")
+        console.log({res})
+    }
+}
 export const readFileBase64 = async (path: string) => FileSystem.readAsStringAsync(path, {encoding: "base64"})
-
 
 const hashFunctionLevel1 = (input: string) => Crypto.digestStringAsync(CryptoDigestAlgorithm.SHA512, input, {encoding: CryptoEncoding.BASE64})
 const hashFunctionLevel2 = (input: string) => Crypto.digestStringAsync(CryptoDigestAlgorithm.SHA512, input, {encoding: CryptoEncoding.HEX})

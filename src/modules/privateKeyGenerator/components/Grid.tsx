@@ -1,37 +1,77 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Image, ImageStyle, StyleSheet, Text, TextStyle, TouchableOpacity, View, ViewStyle} from "react-native"
 import {globalUtils} from "../../../utils/global";
-import {UIComponent} from "../../../types/global";
+import {Dot} from "../../../components/UI/Dot";
+import {UIButton} from "../../../components/UI/UIButton";
+import {generatePrivateKey, readFileBase64, saveImage} from "../utils";
 
 interface PropTypes {
-    level: number
-    backgroundURL: string
-    onPatternMove: (pass:string)=>void
+    imageUri: string
+    mustSaveImage:boolean
 }
 
-export const Grid = ({level, backgroundURL,style,children,onPatternMove}: UIComponent<PropTypes>) => {
-    const levels = globalUtils.range(level)
-    let [boxData, setBoxData] = useState<number[][]>(levels.map(() => levels.map(() => 0)))
+export const Grid = ({imageUri,mustSaveImage}: PropTypes) => {
+    const [level, setLevel] = useState<number | undefined>(undefined)
+    const [pattern, setPattern] = useState<string>("")
+    let [boxData, setBoxData] = useState<number[][] | undefined>(undefined)
+
+
+    useEffect(() => {
+        if (level) {
+            setBoxData(globalUtils.range(level).map(() => globalUtils.range(level).map(() => 0)))
+        }
+    }, [level])
 
     const increment = (i, j) => {
-        onPatternMove(`${i}${j}`)
+        setPattern(prev=>prev+`${i}${j}`)
         setBoxData(prev => prev.map((row, ii) => row.map((item, jj) => (i == ii && j == jj ? item + 1 : item))))
     }
 
-    const styles = Styles({level})
-    return <View style={{...styles.container,...style}}>
-        <Image source={{uri: backgroundURL}} style={styles.background}/>
-        {levels.map(i => <View key={i} style={styles.row}>
-            {
-                levels.map(j => <TouchableOpacity key={j} style={{
-                    ...styles.box,
-                    backgroundColor: `rgba(255,183,0,${0.1 * boxData[i][j]})`
-                }} onPress={() => increment(i,j)}><Text style={styles.label}>{boxData[i][j]}</Text></TouchableOpacity>)
-            }
-        </View>)
+    const submit = async () => {
+        let base64Image = undefined;
+        try {
+            base64Image = await readFileBase64(imageUri)
+        } catch (e) {
+            alert("Failed to load image!")
         }
-        {children}
-    </View>
+        try {
+            const PK = await generatePrivateKey({
+                base64Image,
+                pattern
+            })
+            // await saveImage(imageUri)
+            alert(`Private key:${PK}`)
+        } catch (e) {
+            alert("Failed to create private key!")
+        }
+    }
+
+    const styles = Styles({level})
+    return <>
+        <View style={styles.container}>
+            <Image source={{uri: imageUri}} style={styles.background}/>
+            {
+                level && boxData ? globalUtils.range(level).map(i => <View key={i} style={styles.row}>
+                    {
+                        globalUtils.range(level).map(j => <TouchableOpacity key={j} style={{
+                            ...styles.box,
+                            backgroundColor: `rgba(255,183,0,${0.1 * boxData[i][j]})`
+                        }} onPress={() => increment(i, j)}><Text
+                            style={styles.label}>{boxData[i][j]}</Text></TouchableOpacity>)
+                    }
+                </View>) : <View style={styles.buttons}>
+                    {[2, 3, 4, 5].map(label => <Dot style={{margin:20}} key={label} label={label} active={level === label}
+                                                    onPress={() => setLevel(label)}/>)}
+                </View>
+            }
+            {
+                pattern.length >= 8 && <View style={styles.buttons}>
+                    <UIButton style={{flex:1}} onClick={() => submit()}>Submit</UIButton>
+                </View>
+            }
+        </View>
+    </>
+
 };
 
 const Styles = (arg: { level: number }) => StyleSheet.create<{
@@ -41,6 +81,7 @@ const Styles = (arg: { level: number }) => StyleSheet.create<{
     active: ViewStyle
     background: ImageStyle
     label: TextStyle
+    buttons: ViewStyle
 }>({
     container: {
         flex: 1
@@ -69,5 +110,14 @@ const Styles = (arg: { level: number }) => StyleSheet.create<{
     label: {
         color: "white",
         fontSize: 40
-    }
+    },
+    buttons: {
+        flexDirection: "row",
+        justifyContent: "space-around",
+        alignItems: "center",
+        position:"absolute",
+        bottom:0,
+        left:0,
+        right:0,
+    },
 })
