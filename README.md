@@ -1,4 +1,4 @@
-# crypto-wallet
+# Crypto‑wallet: Featuring an efficient way to generate master‑seed
 
 <p>
   <!-- iOS -->
@@ -7,7 +7,14 @@
   <img alt="Supports Expo Android" longdesc="Supports Expo Android" src="https://img.shields.io/badge/Android-4630EB.svg?style=flat-square&logo=ANDROID&labelColor=A4C639&logoColor=fff" />
 </p>
 
-## HOW TO RUN
+## Introduction
+
+A hot cryptocurrency wallet that features an innovative approach in creating the master‑seed used in <a href="https://github.com/bitcoin/bips/blob/master/bip-0032/derivation.png">BIP 32 HD-wallets</a>.
+
+## Implementation
+The initial implementation is under development for Android and IOS devices, using React‑native.
+
+### How to run?
 - Install packages:
 ```shell
 npm install
