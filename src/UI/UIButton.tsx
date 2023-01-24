@@ -1,6 +1,6 @@
 import React from "react";
 import {StyleSheet, Text, TextStyle, TouchableOpacity, ViewStyle} from "react-native";
-import {UIComponent} from "../../types/global";
+import {UIComponent} from "../types/global";
 
 interface PropTypes {
     bgColor?: string

@@ -1,20 +1,19 @@
 import React, {useEffect, useState} from 'react';
 import {Image, ImageStyle, StyleSheet, Text, TextStyle, TouchableOpacity, View, ViewStyle} from "react-native"
 import {globalUtils} from "../../../utils/global";
-import {Dot} from "../../../components/UI/Dot";
-import {UIButton} from "../../../components/UI/UIButton";
-import {generatePrivateKey, readFileBase64, saveImage} from "../utils";
+import {generatePrivateKey, readFileBase64, savePrivateKey} from "../../../utils/keyGenerator";
+import {Dot} from "../../../UI/Dot";
+import {UIButton} from "../../../UI/UIButton";
 
 interface PropTypes {
     imageUri: string
-    mustSaveImage:boolean
+    onSubmit: () => void
 }
 
-export const Grid = ({imageUri,mustSaveImage}: PropTypes) => {
+export const Grid = ({imageUri, onSubmit}: PropTypes) => {
     const [level, setLevel] = useState<number | undefined>(undefined)
     const [pattern, setPattern] = useState<string>("")
     let [boxData, setBoxData] = useState<number[][] | undefined>(undefined)
-
 
     useEffect(() => {
         if (level) {
@@ -23,7 +22,7 @@ export const Grid = ({imageUri,mustSaveImage}: PropTypes) => {
     }, [level])
 
     const increment = (i, j) => {
-        setPattern(prev=>prev+`${i}${j}`)
+        setPattern(prev => prev + `${i}${j}`)
         setBoxData(prev => prev.map((row, ii) => row.map((item, jj) => (i == ii && j == jj ? item + 1 : item))))
     }
 
@@ -39,10 +38,11 @@ export const Grid = ({imageUri,mustSaveImage}: PropTypes) => {
                 base64Image,
                 pattern
             })
-            // await saveImage(imageUri)
-            alert(`Private key:${PK}`)
+            await savePrivateKey(PK, true)
+            onSubmit()
         } catch (e) {
             alert("Failed to create private key!")
+            console.error(e)
         }
     }
 
@@ -60,13 +60,14 @@ export const Grid = ({imageUri,mustSaveImage}: PropTypes) => {
                             style={styles.label}>{boxData[i][j]}</Text></TouchableOpacity>)
                     }
                 </View>) : <View style={styles.buttons}>
-                    {[2, 3, 4, 5].map(label => <Dot style={{margin:20}} key={label} label={label} active={level === label}
+                    {[2, 3, 4, 5].map(label => <Dot style={{margin: 20}} key={label} label={label}
+                                                    active={level === label}
                                                     onPress={() => setLevel(label)}/>)}
                 </View>
             }
             {
                 pattern.length >= 8 && <View style={styles.buttons}>
-                    <UIButton style={{flex:1}} onClick={() => submit()}>Submit</UIButton>
+                    <UIButton style={{flex: 1}} onClick={() => submit()}>Submit</UIButton>
                 </View>
             }
         </View>
@@ -115,9 +116,9 @@ const Styles = (arg: { level: number }) => StyleSheet.create<{
         flexDirection: "row",
         justifyContent: "space-around",
         alignItems: "center",
-        position:"absolute",
-        bottom:0,
-        left:0,
-        right:0,
+        position: "absolute",
+        bottom: 0,
+        left: 0,
+        right: 0,
     },
 })

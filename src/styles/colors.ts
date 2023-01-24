@@ -1,4 +1,4 @@
-export const ThemeColors: {
+export const Colors: {
     [key: string]: string
 } = {
     secondary:"rgb(255,183,0)",

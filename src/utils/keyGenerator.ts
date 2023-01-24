@@ -1,15 +1,9 @@
 import * as FileSystem from 'expo-file-system';
 import * as Crypto from 'expo-crypto';
 import {CryptoDigestAlgorithm, CryptoEncoding} from 'expo-crypto';
-import * as MediaLibrary from 'expo-media-library';
+import {Store} from "../store";
+import { db } from '../db';
 
-export const saveImage = async (fileUri: string) => {
-    const { status } = await MediaLibrary.getPermissionsAsync();
-    if (status === "granted") {
-        const res = await MediaLibrary.getAlbumAsync("Camera")
-        console.log({res})
-    }
-}
 export const readFileBase64 = async (path: string) => FileSystem.readAsStringAsync(path, {encoding: "base64"})
 
 const hashFunctionLevel1 = (input: string) => Crypto.digestStringAsync(CryptoDigestAlgorithm.SHA512, input, {encoding: CryptoEncoding.BASE64})
@@ -22,8 +16,17 @@ export const generatePrivateKey = async ({base64Image, pattern}: { base64Image: 
     const PK = await hashFunctionLevel2(imageHash + patternHash)
     console.log("PK generated:")
     console.log(`Pattern: ${pattern} =>(base64) ${patternHash}`)
-    console.log(`Image: ${base64Image.substring(0,35)}... =>(base64) ${imageHash}`)
+    console.log(`Image: ${base64Image.substring(0, 35)}... =>(base64) ${imageHash}`)
     console.log(`Key: hash(image) + hash(pattern) =>(HEX) ${PK}`)
-
     return PK
+}
+
+export const savePrivateKey = async (privateKey: string, saveInStorage: boolean) => {
+    let old = Store.privateKey.get()
+    console.log("Last PK:", old)
+    console.log("current PK:", privateKey)
+    // Save PK in memory
+    Store.privateKey.set(privateKey)
+    // Save PK in storage
+    saveInStorage && await db.set(db.keys.PRIVATE_KEY,privateKey)
 }
