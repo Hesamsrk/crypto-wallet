@@ -2,7 +2,7 @@ import {StyleSheet, View, ViewStyle} from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import {useState} from "react";
 import {Grid} from "./components/Grid";
-import {UIButton} from "../../UI/UIButton";
+import {UIButton} from "../../components/UIButton";
 import {Colors} from "../../styles/colors";
 import {Layout} from "../../styles/layout";
 
@@ -28,9 +28,9 @@ export const KeyGen = ()=>{
     return <View style={Layout.page}>
         {status === "import" && imageUri && <Grid imageUri={imageUri} onSubmit={()=>setStatus("menu")}/>}
         {
-            (status !== "menu") ? <UIButton bgColor={Colors.secondary}
+            (status !== "menu") ? <UIButton
                                             onClick={() => setStatus("menu")}>Go Back</UIButton> : <>
-                <UIButton bgColor={Colors.secondary}
+                <UIButton
                           onClick={() => {
                               pickImage().then((ok) => ok && setStatus("import"))
                           }

@@ -1,6 +1,7 @@
 import React from "react";
 import {StyleSheet, Text, TextStyle, TouchableOpacity, ViewStyle} from "react-native";
 import {UIComponent} from "../types/global";
+import {Colors} from "../styles/colors";
 
 interface PropTypes {
     bgColor?: string
@@ -9,7 +10,7 @@ interface PropTypes {
 }
 
 export const UIButton = ({onClick, bgColor, children, width, style}: UIComponent<PropTypes>) => {
-    const styles = Styles({bg: bgColor || "white", width})
+    const styles = Styles({bg: bgColor || Colors.theme.primary, width})
     return <TouchableOpacity style={{...style, ...styles.container}} onPress={onClick}>
         <Text style={styles.title}>{children || ""}</Text>
     </TouchableOpacity>

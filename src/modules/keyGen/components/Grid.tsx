@@ -2,8 +2,9 @@ import React, {useEffect, useState} from 'react';
 import {Image, ImageStyle, StyleSheet, Text, TextStyle, TouchableOpacity, View, ViewStyle} from "react-native"
 import {globalUtils} from "../../../utils/global";
 import {generatePrivateKey, readFileBase64, savePrivateKey} from "../../../utils/keyGenerator";
-import {Dot} from "../../../UI/Dot";
-import {UIButton} from "../../../UI/UIButton";
+import {Dot} from "../../../components/Dot";
+import {UIButton} from "../../../components/UIButton";
+import {Colors} from "../../../styles/colors";
 
 interface PropTypes {
     imageUri: string
@@ -55,7 +56,7 @@ export const Grid = ({imageUri, onSubmit}: PropTypes) => {
                     {
                         globalUtils.range(level).map(j => <TouchableOpacity key={j} style={{
                             ...styles.box,
-                            backgroundColor: `rgba(255,183,0,${0.1 * boxData[i][j]})`
+                            backgroundColor: Colors.alpha(Colors.theme.primary, 0.1 * boxData[i][j], "hex")
                         }} onPress={() => increment(i, j)}><Text
                             style={styles.label}>{boxData[i][j]}</Text></TouchableOpacity>)
                     }
@@ -67,7 +68,7 @@ export const Grid = ({imageUri, onSubmit}: PropTypes) => {
             }
             {
                 pattern.length >= 8 && <View style={styles.buttons}>
-                    <UIButton style={{flex: 1}} onClick={() => submit()}>Submit</UIButton>
+                    <UIButton style={{flex: 1}} bgColor={"white"} onClick={() => submit()}>Submit</UIButton>
                 </View>
             }
         </View>

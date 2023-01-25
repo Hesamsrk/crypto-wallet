@@ -10,6 +10,6 @@ export const Layout = StyleSheet.create<ILayout>({
     page: {
         flex: 1,
         justifyContent:"center",
-        backgroundColor: Colors.background
+        backgroundColor: Colors.theme.background
     }
 })
