@@ -5,7 +5,7 @@ export async function fingerPrintAuth(): Promise<boolean> {
     const hasHardware = await LocalAuthentication.hasHardwareAsync()
 
     if(!hasHardware){
-        Alert.alert("Your device does not support this functionality!")
+        Alert.alert("Sorry","Your device does not support this functionality!")
         return false
     }
 
@@ -13,7 +13,7 @@ export async function fingerPrintAuth(): Promise<boolean> {
 
     // Check if fingerprint is enabled
     if(!biometricEnabled){
-        Alert.alert("You should enable biometric authentication on your device!")
+        Alert.alert("Sorry","You should enable biometric authentication on your device!")
         return false
     }
 

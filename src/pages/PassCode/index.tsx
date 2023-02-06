@@ -93,7 +93,7 @@ export const PassCode = Page(() => {
 }, {
     justifyContent: "center",
     alignItems: "center",
-    paddingTop: 50
+    paddingTop: 10
 })
 
 const styles = StyleSheet.create<{

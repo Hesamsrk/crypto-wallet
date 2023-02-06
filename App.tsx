@@ -3,12 +3,12 @@ import * as SplashScreen from 'expo-splash-screen';
 import {useStorageLoader} from "./src/hooks/usePrivateKeyLoader";
 import {useFontLoader} from "./src/hooks/useFontLoader";
 import {NavigationContainer} from '@react-navigation/native';
-import {PassCode} from "./src/pages/PassCode";
 import {StyleSheet, View, ViewStyle} from "react-native";
 import {createNativeStackNavigator} from "react-native-screens/native-stack";
 import {useHookstate} from "@hookstate/core";
 import {Store} from "./src/store";
-import {Panel} from "./src/pages/Panel";
+import {Theme} from "./src/styles/theme";
+import {Router} from "./src/pages/router";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -17,26 +17,31 @@ const Stack = createNativeStackNavigator();
 const App = () => {
     let {privateKeyLoaded, passCodeLoaded} = useStorageLoader()
     let {fontsLoaded} = useFontLoader()
-    const hookState = useHookstate(Store)
     let appLoaded = fontsLoaded && privateKeyLoaded && passCodeLoaded
+
+    const hookState = useHookstate(Store)
+    const authenticated = hookState.authenticated.get()
+    const privateKey = hookState.privateKey.get()
+
     const onLayoutRootView = useCallback(async () => {
         if (appLoaded) {
             await SplashScreen.hideAsync();
         }
     }, [appLoaded])
-    if (!appLoaded) {
-        return null
-    }
-    return <View onLayout={onLayoutRootView} style={styles.root}>
-        {
-            hookState.authenticated.get() ? <NavigationContainer>
-                <Stack.Navigator>
-                    <Stack.Screen name="Panel" component={Panel} options={{}} />
-                </Stack.Navigator>
-            </NavigationContainer> : <PassCode/>
-        }
 
-    </View>
+
+    return appLoaded ? <View onLayout={onLayoutRootView} style={styles.root}>
+        <NavigationContainer>
+            <Stack.Navigator screenOptions={{
+                headerShown: false,
+                navigationBarColor: Theme.colors.Primary600,
+                statusBarColor: Theme.colors.Accent1
+            }}>
+                {Router({privateKeyExists: !!privateKey, isAuthorized: authenticated}).map((r, i) => r.active ?
+                    <Stack.Screen key={i} name={r.name} component={r.component} options={r.options}/> : null)}
+            </Stack.Navigator>
+        </NavigationContainer>
+    </View> : null
 }
 
 const styles = StyleSheet.create<{ root: ViewStyle }>({

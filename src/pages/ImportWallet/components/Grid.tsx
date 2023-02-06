@@ -3,7 +3,7 @@ import {Image, ImageStyle, StyleSheet, Text, TextStyle, TouchableOpacity, View, 
 import {globalUtils} from "../../../utils/global";
 import {generatePrivateKey, readFileBase64, savePrivateKey} from "../../../utils/keyGenerator";
 import {Theme} from "../../../styles/theme";
-import {UIButton} from "../../../components/UI/UIButton";
+import {Button} from "../../../components/UI/Button";
 import {Dot} from "../../../components/UI/Dot";
 
 interface PropTypes {
@@ -68,7 +68,7 @@ export const Grid = ({imageUri, onSubmit}: PropTypes) => {
             }
             {
                 pattern.length >= 8 && <View style={styles.buttons}>
-                    <UIButton style={{flex: 1}} bgColor={"white"} onClick={() => submit()}>Submit</UIButton>
+                    <Button style={{flex: 1}} bgColor={"white"} onClick={() => submit()}>Submit</Button>
                 </View>
             }
         </View>

@@ -3,7 +3,7 @@ import * as ImagePicker from "expo-image-picker";
 import {useState} from "react";
 import {Grid} from "./components/Grid";
 import {Page} from "../../components/layout/Page";
-import {UIButton} from "../../components/UI/UIButton";
+import {Button} from "../../components/UI/Button";
 
 
 export const ImportWallet = Page(
@@ -26,21 +26,6 @@ export const ImportWallet = Page(
             return !result.canceled
         };
 
-        // return <View>
-        //     {status === "import" && imageUri && <Grid imageUri={imageUri} onSubmit={() => setStatus("menu")}/>}
-        //     {
-        //         (status !== "menu") ? <UIButton
-        //             onClick={() => setStatus("menu")}>Go Back</UIButton> : <>
-        //             <UIButton
-        //                 onClick={() => {
-        //                     pickImage().then((ok) => ok && setStatus("import"))
-        //                 }
-        //                 }>Import Private Key</UIButton>
-        //         </>
-        //     }
-        // </View>
-
-        return <>
-        </>
+        return <Grid imageUri={imageUri} onSubmit={() => setStatus("menu")}/>
     }
 )
