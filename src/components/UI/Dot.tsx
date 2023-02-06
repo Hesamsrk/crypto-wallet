@@ -1,6 +1,6 @@
 import React from 'react';
 import {UIComponent} from "../../types/global";
-import {StyleSheet, Text, TextStyle, TouchableOpacity, View, ViewStyle} from "react-native";
+import {StyleSheet, Text, TextStyle, TouchableOpacity, ViewStyle} from "react-native";
 
 interface PropTypes{
     active:boolean

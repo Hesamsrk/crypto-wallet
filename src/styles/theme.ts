@@ -1,6 +1,15 @@
-const theme = {
-    primary: "#ffb700",
-    background: "#090913"
+const colors = {
+    Primary600: "#0B132B",
+    Primary500: "#1C2541",
+    Accent1: "#AE2546",
+    Accent2: "#138A7C",
+    Background: "#FFFFFF",
+    Gray600: "#D9D9D9",
+    Gray500: "#F1F1F1",
+    Text:{
+        Light:"#FFFFFF",
+        Dark:"#0E1821"
+    }
 }
 
 interface RGB {
@@ -33,7 +42,7 @@ const alpha = (color: string, alpha: number, type: "rgb" | "hex") => {
 }
 
 
-export const Colors = {
-    theme,
+export const Theme = {
+    colors,
     alpha
 }

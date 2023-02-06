@@ -2,9 +2,9 @@ import React, {useEffect, useState} from 'react';
 import {Image, ImageStyle, StyleSheet, Text, TextStyle, TouchableOpacity, View, ViewStyle} from "react-native"
 import {globalUtils} from "../../../utils/global";
 import {generatePrivateKey, readFileBase64, savePrivateKey} from "../../../utils/keyGenerator";
-import {Dot} from "../../../components/Dot";
-import {UIButton} from "../../../components/UIButton";
-import {Colors} from "../../../styles/colors";
+import {Theme} from "../../../styles/theme";
+import {UIButton} from "../../../components/UI/UIButton";
+import {Dot} from "../../../components/UI/Dot";
 
 interface PropTypes {
     imageUri: string
@@ -43,7 +43,7 @@ export const Grid = ({imageUri, onSubmit}: PropTypes) => {
             onSubmit()
         } catch (e) {
             alert("Failed to create private key!")
-            console.error(e)
+            console.log(e)
         }
     }
 
@@ -56,7 +56,7 @@ export const Grid = ({imageUri, onSubmit}: PropTypes) => {
                     {
                         globalUtils.range(level).map(j => <TouchableOpacity key={j} style={{
                             ...styles.box,
-                            backgroundColor: Colors.alpha(Colors.theme.primary, 0.1 * boxData[i][j], "hex")
+                            backgroundColor: Theme.alpha(Theme.colors.Accent1, 0.1 * boxData[i][j], "hex")
                         }} onPress={() => increment(i, j)}><Text
                             style={styles.label}>{boxData[i][j]}</Text></TouchableOpacity>)
                     }

@@ -6,12 +6,13 @@ export const db = {
         console.log(`db.set("${key}","${value}")`);
     },
     get: async (key: string) => {
-        let result = await SecureStore.getItemAsync(key);
+        let result = await SecureStore.getItemAsync(key) || "";
         console.log(`db.get("${key}"): ${result}`);;
         return result
     },
     keys: {
-        PRIVATE_KEY: "private-key"
+        PRIVATE_KEY: "private-key",
+        PASS_CODE:"pass-code"
     }
 }
 
