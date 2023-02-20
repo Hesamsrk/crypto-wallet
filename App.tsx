@@ -35,7 +35,7 @@ const App = () => {
             <Stack.Navigator screenOptions={{
                 headerShown: false,
                 navigationBarColor: Theme.colors.Primary600,
-                statusBarColor: Theme.colors.Accent1
+                statusBarColor:Theme.colors.Primary600
             }}>
                 {Router({privateKeyExists: !!privateKey, isAuthorized: authenticated}).map((r, i) => r.active ?
                     <Stack.Screen key={i} name={r.name} component={r.component} options={r.options}/> : null)}

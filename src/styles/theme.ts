@@ -9,7 +9,8 @@ const colors = {
     Text:{
         Light:"#FFFFFF",
         Dark:"#0E1821"
-    }
+    },
+    Black:"#000"
 }
 
 interface RGB {

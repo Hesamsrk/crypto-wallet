@@ -1,20 +1,24 @@
 import React from 'react';
-import {Dimensions, StyleSheet, Text, View} from "react-native";
+import {Dimensions, StyleSheet, Text, View,StatusBar} from "react-native";
 import {Theme} from "../../../styles/theme";
-import BitCoin from "../../../assets/symbols/BTC.svg"
 import CalculatorLine from "../../../assets/material/calculatorLine.svg"
 import {faEye, faQrcode, faRightFromBracket} from "@fortawesome/free-solid-svg-icons";
 import {FontAwesomeIcon} from "@fortawesome/react-native-fontawesome";
 import {Button} from "../../../components/UI/Button";
 import {Typography} from "../../../styles/typography";
 import {ButtonBase} from "../../../components/UI/ButtonBase";
+import {Currency} from "../../../utils/currencies";
 
 const screenWidth = Dimensions.get('window').width;
 
-export const PanelHeader: React.FC = () => {
+interface PropTypes{
+    currency:Currency
+}
+
+export const PanelHeader: React.FC<PropTypes> = ({currency:Currency}) => {
     return (<View style={styles.container}>
         <View style={styles.iconBox}>
-            <BitCoin width={"100%"} height={"100%"}/>
+            <Currency.icon width={"100%"} height={"100%"}/>
         </View>
         <View style={styles.leftBox}>
             <View style={styles.topRow}>
@@ -25,7 +29,7 @@ export const PanelHeader: React.FC = () => {
                         <Text style={styles.buttonExitText}>Exit Wallet</Text>
                     </View>
                 </Button>
-                <FontAwesomeIcon size={35} color={Theme.colors.Gray500} icon={faQrcode}/>
+                <ButtonBase><FontAwesomeIcon size={35} color={Theme.colors.Gray500} icon={faQrcode}/></ButtonBase>
             </View>
             <View style={styles.calculator}>
                 <View style={styles.calculatorRow}>
@@ -76,12 +80,12 @@ const styles = StyleSheet.create({
         },
         shadowOpacity: 0.60,
         shadowRadius: 11.27,
-        elevation: 40
+        elevation: 40,
+        paddingTop: StatusBar.currentHeight + 5,
     },
     leftBox: {
         width: screenWidth - coinIconDimension + coinIconHorizontalPadding,
         height: "100%",
-        paddingTop: 30,
     },
     iconBox: {
         height: coinIconDimension,

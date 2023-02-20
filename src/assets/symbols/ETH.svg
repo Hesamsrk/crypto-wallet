@@ -1,42 +1,23 @@
 <svg width="100" height="100" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-<g opacity="0.6">
-<mask id="mask0_14_240" style="mask-type:luminance" maskUnits="userSpaceOnUse" x="19" y="36" width="62" height="34">
-<path d="M19 36.9736H80.3853V69.072H19V36.9736Z" fill="white"/>
-</mask>
-<g mask="url(#mask0_14_240)">
-<path d="M49.6987 36.9736L19 50.9352L49.6987 69.072L80.3853 50.9352L49.6987 36.9736Z" fill="#010101"/>
+<g filter="url(#filter0_i_111_1074)">
+<rect width="100" height="100" rx="50" fill="#E0E0E0"/>
+<path d="M50.4911 0L49.8246 2.27888V68.4009L50.4911 69.0703L80.9813 50.9277L50.4911 0Z" fill="#343434"/>
+<path d="M50.4911 0L20 50.9277L50.4911 69.0703V36.9765V0Z" fill="#8C8C8C"/>
+<path d="M50.491 74.8814L50.1154 75.3425V98.8962L50.491 100L80.9999 56.7482L50.491 74.8814Z" fill="#3C3C3B"/>
+<path d="M50.4911 100V74.8814L20 56.7482L50.4911 100Z" fill="#8C8C8C"/>
+<path d="M50.4911 69.0703L80.9814 50.9277L50.4911 36.9764V69.0703Z" fill="#141414"/>
+<path d="M20 50.9277L50.4911 69.0703V36.9764L20 50.9277Z" fill="#393939"/>
 </g>
-</g>
-<g opacity="0.45">
-<mask id="mask1_14_240" style="mask-type:luminance" maskUnits="userSpaceOnUse" x="19" y="0" width="31" height="70">
-<path d="M19 0H49.6987V69.072H19V0Z" fill="white"/>
-</mask>
-<g mask="url(#mask1_14_240)">
-<path d="M19 50.9352L49.6987 69.072V0L19 50.9352Z" fill="#010101"/>
-</g>
-</g>
-<g opacity="0.8">
-<mask id="mask2_14_240" style="mask-type:luminance" maskUnits="userSpaceOnUse" x="49" y="0" width="32" height="70">
-<path d="M49.6987 0H80.3974V69.072H49.6987V0Z" fill="white"/>
-</mask>
-<g mask="url(#mask2_14_240)">
-<path d="M49.6987 0V69.072L80.3854 50.9352L49.6987 0Z" fill="#010101"/>
-</g>
-</g>
-<g opacity="0.45">
-<mask id="mask3_14_240" style="mask-type:luminance" maskUnits="userSpaceOnUse" x="19" y="56" width="31" height="44">
-<path d="M19 56.7515H49.6987V100H19V56.7515Z" fill="white"/>
-</mask>
-<g mask="url(#mask3_14_240)">
-<path d="M19 56.7515L49.6987 100V74.8884L19 56.7515Z" fill="#010101"/>
-</g>
-</g>
-<g opacity="0.8">
-<mask id="mask4_14_240" style="mask-type:luminance" maskUnits="userSpaceOnUse" x="49" y="56" width="32" height="44">
-<path d="M49.6987 56.7515H80.4095V100H49.6987V56.7515Z" fill="white"/>
-</mask>
-<g mask="url(#mask4_14_240)">
-<path d="M49.6987 74.8884V100L80.4095 56.7515L49.6987 74.8884Z" fill="#010101"/>
-</g>
-</g>
+<defs>
+<filter id="filter0_i_111_1074" x="0" y="0" width="104" height="104" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
+<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+<feOffset dx="10" dy="6"/>
+<feGaussianBlur stdDeviation="2"/>
+<feComposite in2="hardAlpha" operator="arithmetic" k2="-1" k3="1"/>
+<feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.32 0"/>
+<feBlend mode="normal" in2="shape" result="effect1_innerShadow_111_1074"/>
+</filter>
+</defs>
 </svg>
