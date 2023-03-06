@@ -9,10 +9,12 @@ import {useHookstate} from "@hookstate/core";
 import {Store} from "./src/store";
 import {Theme} from "./src/styles/theme";
 import {Router} from "./src/pages/router";
+import {QueryClient, QueryClientProvider} from "react-query";
 
 SplashScreen.preventAutoHideAsync();
 
 const Stack = createNativeStackNavigator();
+const queryClient = new QueryClient()
 
 const App = () => {
     let {privateKeyLoaded, passCodeLoaded} = useStorageLoader()
@@ -31,16 +33,18 @@ const App = () => {
 
 
     return appLoaded ? <View onLayout={onLayoutRootView} style={styles.root}>
-        <NavigationContainer>
-            <Stack.Navigator screenOptions={{
-                headerShown: false,
-                navigationBarColor: Theme.colors.Primary600,
-                statusBarColor:Theme.colors.Primary600
-            }}>
-                {Router({privateKeyExists: !!privateKey, isAuthorized: authenticated}).map((r, i) => r.active ?
-                    <Stack.Screen key={i} name={r.name} component={r.component} options={r.options}/> : null)}
-            </Stack.Navigator>
-        </NavigationContainer>
+        <QueryClientProvider client={queryClient}>
+            <NavigationContainer>
+                <Stack.Navigator screenOptions={{
+                    headerShown: false,
+                    navigationBarColor: Theme.colors.Primary600,
+                    statusBarColor:Theme.colors.Primary600
+                }}>
+                    {Router({privateKeyExists: !!privateKey, isAuthorized: authenticated}).map((r, i) => r.active ?
+                        <Stack.Screen key={i} name={r.name} component={r.component} options={r.options}/> : null)}
+                </Stack.Navigator>
+            </NavigationContainer>
+        </QueryClientProvider>
     </View> : null
 }
 

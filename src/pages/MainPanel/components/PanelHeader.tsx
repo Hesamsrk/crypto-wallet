@@ -21,7 +21,8 @@ export const PanelHeader: React.FC<PropTypes> = ({currency: SelectedCurrency}) =
     for (let curr of Currencies) {
         Total += curr.getAmount() * curr.getPrice()
     }
-    let BTC = Currencies.find(c=>c.symbol==="BTC")
+    let BTC = Currencies.find(c => c.symbol === "BTC")
+
 
     return (<View style={styles.container}>
         <View style={styles.iconBox}>
@@ -66,7 +67,8 @@ export const PanelHeader: React.FC<PropTypes> = ({currency: SelectedCurrency}) =
         </View>
         <View style={styles.footer}>
             <View><Text style={styles.totalUSD}>{`${Util.formatNumber(Total, 2)} $`}</Text></View>
-            {BTC && <View><Text style={styles.totalBTC}>{`${Util.formatNumber(Total/BTC.getPrice(), BTC.precision)} ${BTC.symbol}`}</Text></View>}
+            {BTC && <View><Text
+                style={styles.totalBTC}>{`${Util.formatNumber(Total / BTC.getPrice(), BTC.precision)} ${BTC.symbol}`}</Text></View>}
             <ButtonBase style={styles.eyeButton}>
                 <FontAwesomeIcon size={25} color={Theme.colors.Gray500} icon={faEye}/>
             </ButtonBase>
@@ -114,7 +116,6 @@ const styles = StyleSheet.create({
         backgroundColor: Theme.colors.Primary500,
         height: footerHeight,
         borderBottomLeftRadius: 20,
-        borderBottomRightRadius: 20,
         borderTopRightRadius: 20,
         padding: 15,
         flexDirection: "row",
