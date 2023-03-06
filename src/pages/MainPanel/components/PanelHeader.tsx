@@ -1,5 +1,5 @@
 import React from 'react';
-import {Dimensions, StyleSheet, Text, View,StatusBar} from "react-native";
+import {Dimensions, StatusBar, StyleSheet, Text, View} from "react-native";
 import {Theme} from "../../../styles/theme";
 import CalculatorLine from "../../../assets/material/calculatorLine.svg"
 import {faEye, faQrcode, faRightFromBracket} from "@fortawesome/free-solid-svg-icons";
@@ -7,18 +7,25 @@ import {FontAwesomeIcon} from "@fortawesome/react-native-fontawesome";
 import {Button} from "../../../components/UI/Button";
 import {Typography} from "../../../styles/typography";
 import {ButtonBase} from "../../../components/UI/ButtonBase";
-import {Currency} from "../../../utils/currencies";
+import {Currencies, Currency} from "../../../modules/currnecies/currencies";
+import {Util} from "../../../utils/global";
 
 const screenWidth = Dimensions.get('window').width;
 
-interface PropTypes{
-    currency:Currency
+interface PropTypes {
+    currency: Currency
 }
 
-export const PanelHeader: React.FC<PropTypes> = ({currency:Currency}) => {
+export const PanelHeader: React.FC<PropTypes> = ({currency: SelectedCurrency}) => {
+    let Total = 0
+    for (let curr of Currencies) {
+        Total += curr.getAmount() * curr.getPrice()
+    }
+    let BTC = Currencies.find(c=>c.symbol==="BTC")
+
     return (<View style={styles.container}>
         <View style={styles.iconBox}>
-            <Currency.icon width={"100%"} height={"100%"}/>
+            <SelectedCurrency.icon width={"100%"} height={"100%"}/>
         </View>
         <View style={styles.leftBox}>
             <View style={styles.topRow}>
@@ -34,27 +41,32 @@ export const PanelHeader: React.FC<PropTypes> = ({currency:Currency}) => {
             <View style={styles.calculator}>
                 <View style={styles.calculatorRow}>
                     <Text style={styles.calculatorKey}>Amount</Text>
-                    <Text style={styles.calculatorValue}>2.000125 BTC</Text>
+                    <Text
+                        style={styles.calculatorValue}>{`${Util.formatNumber(SelectedCurrency.getAmount(), SelectedCurrency.precision)} ${SelectedCurrency.symbol}`}</Text>
                 </View>
                 <View style={styles.calculatorRow}>
                     <Text style={styles.calculatorKey}>Price</Text>
-                    <Text style={styles.calculatorValue}>22,000.01 $</Text>
+                    <Text
+                        style={styles.calculatorValue}>{`${Util.formatNumber(SelectedCurrency.getPrice(), 2)} $`}</Text>
                 </View>
                 <CalculatorLine width={"100%"} height={12}/>
                 <View style={styles.calculatorRow}>
                     <Text style={styles.calculatorKey}>Total</Text>
-                    <Text style={styles.calculatorValue}>44,000.01 $</Text>
+                    <Text
+                        style={styles.calculatorValue}>{`${Util.formatNumber(SelectedCurrency.getPrice() * SelectedCurrency.getAmount(), 2)} $`}</Text>
                 </View>
                 <View style={styles.buttonRow}>
-                    <Button style={styles.transferButton} labelStyle={styles.transferButtonLabel} color={Theme.colors.Accent1} label={"Send"}/>
-                    <Button style={styles.transferButton} labelStyle={styles.transferButtonLabel} color={Theme.colors.Accent2} label={"Receive"}/>
+                    <Button style={styles.transferButton} labelStyle={styles.transferButtonLabel}
+                            color={Theme.colors.Accent1} label={"Send"}/>
+                    <Button style={styles.transferButton} labelStyle={styles.transferButtonLabel}
+                            color={Theme.colors.Accent2} label={"Receive"}/>
                 </View>
             </View>
             <Text style={styles.footerTitle}>Total Assets</Text>
         </View>
         <View style={styles.footer}>
-            <View><Text style={styles.totalUSD}>9,000,414.05 $</Text></View>
-            <View><Text style={styles.totalBTC}>99.00001 BTC</Text></View>
+            <View><Text style={styles.totalUSD}>{`${Util.formatNumber(Total, 2)} $`}</Text></View>
+            {BTC && <View><Text style={styles.totalBTC}>{`${Util.formatNumber(Total/BTC.getPrice(), BTC.precision)} ${BTC.symbol}`}</Text></View>}
             <ButtonBase style={styles.eyeButton}>
                 <FontAwesomeIcon size={25} color={Theme.colors.Gray500} icon={faEye}/>
             </ButtonBase>
@@ -148,7 +160,7 @@ const styles = StyleSheet.create({
     topRow: {
         flexDirection: "row",
         alignItems: "center",
-        marginBottom:10
+        marginBottom: 10
     },
     ButtonExit: {
         marginLeft: 10,
@@ -172,39 +184,39 @@ const styles = StyleSheet.create({
             rotate: "180deg"
         }]
     },
-    calculator:{
-        width:"100%",
+    calculator: {
+        width: "100%",
     },
-    calculatorRow:{
-        flexDirection:"row",
-        paddingLeft:20,
-        marginVertical:3,
+    calculatorRow: {
+        flexDirection: "row",
+        paddingLeft: 20,
+        marginVertical: 3,
     },
-    calculatorKey:Typography.create({
-        color:Theme.colors.Gray500,
-        fontSize:14,
-        flex:1,
+    calculatorKey: Typography.create({
+        color: Theme.colors.Gray500,
+        fontSize: 14,
+        flex: 1,
     }),
-    calculatorValue:Typography.create({
-        color:Theme.colors.Gray500,
-        fontSize:14,
-        flex:2,
+    calculatorValue: Typography.create({
+        color: Theme.colors.Gray500,
+        fontSize: 14,
+        flex: 2,
     }),
-    buttonRow:{
-        flexDirection:"row",
-        justifyContent:"center",
-        marginTop:10
+    buttonRow: {
+        flexDirection: "row",
+        justifyContent: "center",
+        marginTop: 10
     },
-    transferButton:{
-        marginHorizontal:5,
-        paddingHorizontal:0,
-        paddingVertical:0,
-        height:35,
-        width:90,
-        borderRadius:100
+    transferButton: {
+        marginHorizontal: 5,
+        paddingHorizontal: 0,
+        paddingVertical: 0,
+        height: 35,
+        width: 90,
+        borderRadius: 100
     },
-    transferButtonLabel:Typography.create({
-        fontSize:14,
-        color:Theme.colors.Gray500
+    transferButtonLabel: Typography.create({
+        fontSize: 14,
+        color: Theme.colors.Gray500
     })
 })

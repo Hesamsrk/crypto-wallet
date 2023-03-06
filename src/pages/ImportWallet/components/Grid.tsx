@@ -1,10 +1,9 @@
 import React, {useEffect, useState} from 'react';
 import {Image, ImageStyle, StyleSheet, Text, TextStyle, TouchableOpacity, View, ViewStyle} from "react-native"
-import {globalUtils} from "../../../utils/global";
-import {generatePrivateKey, readFileBase64, savePrivateKey} from "../../../utils/keyGenerator";
+import {Util} from "../../../utils/global";
+import {generatePrivateKey, readFileBase64, savePrivateKey} from "../../../modules/hdwallet/key";
 import {Theme} from "../../../styles/theme";
 import {Button} from "../../../components/UI/Button";
-import {Dot} from "../../../components/UI/Dot";
 
 interface PropTypes {
     imageUri: string
@@ -18,7 +17,7 @@ export const Grid = ({imageUri, onSubmit}: PropTypes) => {
 
     useEffect(() => {
         if (level) {
-            setBoxData(globalUtils.range(level).map(() => globalUtils.range(level).map(() => 0)))
+            setBoxData(Util.range(level).map(() => Util.range(level).map(() => 0)))
         }
     }, [level])
 
@@ -52,23 +51,21 @@ export const Grid = ({imageUri, onSubmit}: PropTypes) => {
         <View style={styles.container}>
             <Image source={{uri: imageUri}} style={styles.background}/>
             {
-                level && boxData ? globalUtils.range(level).map(i => <View key={i} style={styles.row}>
+                level && boxData ? Util.range(level).map(i => <View key={i} style={styles.row}>
                     {
-                        globalUtils.range(level).map(j => <TouchableOpacity key={j} style={{
+                        Util.range(level).map(j => <TouchableOpacity key={j} style={{
                             ...styles.box,
                             backgroundColor: Theme.alpha(Theme.colors.Accent1, 0.1 * boxData[i][j], "hex")
                         }} onPress={() => increment(i, j)}><Text
                             style={styles.label}>{boxData[i][j]}</Text></TouchableOpacity>)
                     }
                 </View>) : <View style={styles.buttons}>
-                    {[2, 3, 4, 5].map(label => <Dot style={{margin: 20}} key={label} label={label}
-                                                    active={level === label}
-                                                    onPress={() => setLevel(label)}/>)}
+                    {[2, 3, 4, 5].map(label => <Text>DOT</Text>)}
                 </View>
             }
             {
                 pattern.length >= 8 && <View style={styles.buttons}>
-                    <Button style={{flex: 1}} bgColor={"white"} onClick={() => submit()}>Submit</Button>
+                    <Button style={{flex: 1}} onClick={() => submit()}>Submit</Button>
                 </View>
             }
         </View>

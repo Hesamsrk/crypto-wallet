@@ -1,7 +1,7 @@
 import {Page} from "../../components/layout/Page";
 import {PanelHeader} from "./components/PanelHeader";
 import {ScrollView, StyleSheet, Text, View} from "react-native";
-import {Currencies, Currency} from "../../utils/currencies";
+import {Currencies, Currency} from "../../modules/currnecies/currencies";
 import {CurrencyCard} from "./components/CurrencyCard";
 import {useState} from "react";
 import {Typography} from "../../styles/typography";

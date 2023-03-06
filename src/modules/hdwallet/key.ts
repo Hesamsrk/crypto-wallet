@@ -1,8 +1,8 @@
 import * as FileSystem from 'expo-file-system';
 import * as Crypto from 'expo-crypto';
 import {CryptoDigestAlgorithm, CryptoEncoding} from 'expo-crypto';
-import {Store} from "../store";
-import { db } from '../db';
+import {Store} from "../../store";
+import { db } from '../../db';
 
 export const readFileBase64 = async (path: string) => FileSystem.readAsStringAsync(path, {encoding: "base64"})
 
