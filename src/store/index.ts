@@ -4,13 +4,15 @@ interface IStore {
     privateKey: string
     passCode:string
     authenticated:boolean
+    displayNumbers:boolean
 }
 
 
 export const Store = hookstate<IStore>({
     privateKey: "",
     passCode:"",
-    authenticated:false
+    authenticated:false,
+    displayNumbers:true
 });
 
 

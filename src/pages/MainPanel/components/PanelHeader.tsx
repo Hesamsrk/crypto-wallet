@@ -2,7 +2,7 @@ import React from 'react';
 import {Alert, Dimensions, StatusBar, StyleSheet, Text, View} from "react-native";
 import {Theme} from "../../../styles/theme";
 import CalculatorLine from "../../../assets/material/calculatorLine.svg"
-import {faEye, faQrcode, faRightFromBracket} from "@fortawesome/free-solid-svg-icons";
+import {faEye,faEyeSlash, faQrcode, faRightFromBracket} from "@fortawesome/free-solid-svg-icons";
 import {FontAwesomeIcon} from "@fortawesome/react-native-fontawesome";
 import {Button} from "../../../components/UI/Button";
 import {Typography} from "../../../styles/typography";
@@ -10,6 +10,8 @@ import {ButtonBase} from "../../../components/UI/ButtonBase";
 import {Currencies, Currency} from "../../../config/currencies";
 import {Util} from "../../../utils/global";
 import {removePrivateKey} from "../../../modules/hdwallet/key";
+import {useHookstate} from "@hookstate/core";
+import {Store} from "../../../store";
 
 const screenWidth = Dimensions.get('window').width;
 
@@ -18,6 +20,9 @@ interface PropTypes {
 }
 
 export const PanelHeader: React.FC<PropTypes> = ({currency: SelectedCurrency}) => {
+    const hookState = useHookstate(Store)
+    const displayNumbers = hookState.displayNumbers.get()
+
     let Total = 0
     for (let curr of Currencies) {
         Total += curr.getAmount() * curr.getPrice()
@@ -39,7 +44,7 @@ export const PanelHeader: React.FC<PropTypes> = ({currency: SelectedCurrency}) =
                                 removePrivateKey().then(() => {
                                 })
                             }
-                        }],{cancelable:false})
+                        }], {cancelable: false})
                 }}>
                     <View style={styles.buttonExitInner}>
                         <FontAwesomeIcon style={styles.buttonExitIcon} size={15} color={Theme.colors.Gray500}
@@ -53,7 +58,7 @@ export const PanelHeader: React.FC<PropTypes> = ({currency: SelectedCurrency}) =
                 <View style={styles.calculatorRow}>
                     <Text style={styles.calculatorKey}>Amount</Text>
                     <Text
-                        style={styles.calculatorValue}>{`${Util.formatNumber(SelectedCurrency.getAmount(), SelectedCurrency.precision)} ${SelectedCurrency.symbol}`}</Text>
+                        style={styles.calculatorValue}>{`${Util.formatNumber(SelectedCurrency.getAmount(), SelectedCurrency.precision, displayNumbers)} ${SelectedCurrency.symbol}`}</Text>
                 </View>
                 <View style={styles.calculatorRow}>
                     <Text style={styles.calculatorKey}>Price</Text>
@@ -64,7 +69,7 @@ export const PanelHeader: React.FC<PropTypes> = ({currency: SelectedCurrency}) =
                 <View style={styles.calculatorRow}>
                     <Text style={styles.calculatorKey}>Total</Text>
                     <Text
-                        style={styles.calculatorValue}>{`${Util.formatNumber(SelectedCurrency.getPrice() * SelectedCurrency.getAmount(), 2)} $`}</Text>
+                        style={styles.calculatorValue}>{`${Util.formatNumber(SelectedCurrency.getPrice() * SelectedCurrency.getAmount(), 2, displayNumbers)} $`}</Text>
                 </View>
                 <View style={styles.buttonRow}>
                     <Button style={styles.transferButton} labelStyle={styles.transferButtonLabel}
@@ -76,11 +81,13 @@ export const PanelHeader: React.FC<PropTypes> = ({currency: SelectedCurrency}) =
             <Text style={styles.footerTitle}>Total Assets</Text>
         </View>
         <View style={styles.footer}>
-            <View><Text style={styles.totalUSD}>{`${Util.formatNumber(Total, 2)} $`}</Text></View>
+            <View><Text style={styles.totalUSD}>{`${Util.formatNumber(Total, 2, displayNumbers)} $`}</Text></View>
             {BTC && <View><Text
-                style={styles.totalBTC}>{`${Util.formatNumber(Total / BTC.getPrice(), BTC.precision)} ${BTC.symbol}`}</Text></View>}
-            <ButtonBase style={styles.eyeButton}>
-                <FontAwesomeIcon size={25} color={Theme.colors.Gray500} icon={faEye}/>
+                style={styles.totalBTC}>{`${Util.formatNumber(Total / BTC.getPrice(), BTC.precision, displayNumbers)} ${BTC.symbol}`}</Text></View>}
+            <ButtonBase style={styles.eyeButton} onClick={()=>{
+                hookState.displayNumbers.set(old=>!old)
+            }}>
+                <FontAwesomeIcon size={25} color={Theme.colors.Gray500} icon={displayNumbers?faEye:faEyeSlash}/>
             </ButtonBase>
         </View>
     </View>)
@@ -129,7 +136,7 @@ const styles = StyleSheet.create({
         borderTopRightRadius: 20,
         padding: 15,
         flexDirection: "row",
-        justifyContent: "flex-start",
+        justifyContent: "space-around",
         alignItems: "flex-end",
 
         shadowColor: Theme.colors.Primary600,

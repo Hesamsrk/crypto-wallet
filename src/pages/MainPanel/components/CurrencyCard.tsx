@@ -5,6 +5,8 @@ import {Theme} from "../../../styles/theme";
 import {useShake} from "../../../hooks/useShake";
 import {Typography} from "../../../styles/typography";
 import {Util} from "../../../utils/global";
+import {useHookstate} from "@hookstate/core";
+import {Store} from "../../../store";
 interface PropTypes{
     currency:Currency
     onSelect?:()=>any
@@ -12,7 +14,8 @@ interface PropTypes{
 }
 export const CurrencyCard: React.FC<PropTypes & ViewProps> = ({currency:Currency,onSelect,selected,...ViewProps}) => {
     const {shake,ShakeContainer} = useShake()
-
+    const hookState = useHookstate(Store)
+    const displayNumbers = hookState.displayNumbers.get()
     return (<ShakeContainer>
         <TouchableWithoutFeedback onPress={()=>{
             onSelect && onSelect()
@@ -30,7 +33,7 @@ export const CurrencyCard: React.FC<PropTypes & ViewProps> = ({currency:Currency
                 </Text>
                 <View style={styles.amountContainer}>
                     <Text style={styles.amount}>
-                        {Util.formatNumber(Currency.getAmount(),Currency.precision)}
+                        {Util.formatNumber(Currency.getAmount(),Currency.precision,displayNumbers)}
                     </Text>
                     <Text style={styles.symbol}>
                         {Currency.symbol}
