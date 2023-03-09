@@ -1,6 +1,6 @@
 import React from 'react';
 import {StyleSheet, View, Text,ViewProps,TouchableWithoutFeedback} from "react-native";
-import {Currency} from "../../../modules/currnecies/currencies";
+import {Currency} from "../../../config/currencies";
 import {Theme} from "../../../styles/theme";
 import {useShake} from "../../../hooks/useShake";
 import {Typography} from "../../../styles/typography";
@@ -66,7 +66,7 @@ const styles = StyleSheet.create({
         height: 120,
         width: 120,
         position: "absolute",
-        right: -35,
+        right: -40,
         top: -5,
         borderRadius:200,
     },
@@ -75,14 +75,15 @@ const styles = StyleSheet.create({
         borderWidth:4,
     },
     contentBox:{
-        width:90,
+        width:100,
         height:"100%",
         paddingLeft:8,
         paddingTop:10
     },
     name:Typography.create({
         color:Theme.colors.Black,
-        fontSize:17
+        fontSize:16,
+
     }),
     price:Typography.create({
         color:Theme.colors.Primary500,

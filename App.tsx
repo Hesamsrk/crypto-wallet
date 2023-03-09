@@ -4,7 +4,7 @@ import {useStorageLoader} from "./src/hooks/usePrivateKeyLoader";
 import {useFontLoader} from "./src/hooks/useFontLoader";
 import {NavigationContainer} from '@react-navigation/native';
 import {StyleSheet, View, ViewStyle} from "react-native";
-import {createNativeStackNavigator} from "react-native-screens/native-stack";
+import {createNativeStackNavigator} from "@react-navigation/native-stack";
 import {useHookstate} from "@hookstate/core";
 import {Store} from "./src/store";
 import {Theme} from "./src/styles/theme";
@@ -31,14 +31,13 @@ const App = () => {
         }
     }, [appLoaded])
 
-
     return appLoaded ? <View onLayout={onLayoutRootView} style={styles.root}>
         <QueryClientProvider client={queryClient}>
             <NavigationContainer>
                 <Stack.Navigator screenOptions={{
                     headerShown: false,
                     navigationBarColor: Theme.colors.Primary600,
-                    statusBarColor:Theme.colors.Primary600
+                    statusBarColor:Theme.colors.Primary600,
                 }}>
                     {Router({privateKeyExists: !!privateKey, isAuthorized: authenticated}).map((r, i) => r.active ?
                         <Stack.Screen key={i} name={r.name} component={r.component} options={r.options}/> : null)}

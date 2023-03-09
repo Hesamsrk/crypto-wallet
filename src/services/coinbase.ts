@@ -1,44 +1,45 @@
 import axios from "axios";
 import {Configs} from "../config";
+import {Currencies, SupportedSymbols} from "../config/currencies";
+import {Endpoint} from "./index";
 
-const handler = new axios.Axios({
+const AX = new axios.Axios({
     baseURL: "https://pro-api.coinmarketcap.com",
     headers: {
         "X-CMC_PRO_API_KEY": Configs.COINBASE_API_TOKEN
     },
 })
 
-interface metadataOT {
+export interface CoinData {
     status: {
         timestamp: string
     },
     data: {
-        [key in "BTC" | "USDT" | "ETH" | "TRX" | "DOGE" | "BNB"]: {
+        [key in SupportedSymbols]: {
             quote: {
                 USD: {
-                    price: 288.285430973451,
-                    percent_change_24h: 0.09489219,
+                    price: number,
+                    percent_change_24h: number,
                 }
             }
         }
     }
 }
 
-
 const endpoints = {
-    Metadata: {
-        description: "Get data of up to 100 different symbols at once",
-        url: "v2/cryptocurrency/quotes/latest",
-        params: {
-            symbol: "BTC,USDT,ETH,TRX,DOGE,BNB"
-        },
-        method: "GET",
-        handler: () => handler.get<metadataOT>(endpoints.Metadata.url, {params: endpoints.Metadata.params})
-    }
+    coinData: new Endpoint<CoinData>({
+            url: "v2/cryptocurrency/quotes/latest",
+            params: {
+                symbol: Currencies.map(o => o.symbol).join(",")
+            },
+            method: "GET",
+            axios: AX
+        }
+    ),
 }
 
 
 export const coinbase = {
-    handler,
+    AX,
     endpoints
 }

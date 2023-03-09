@@ -1,50 +1,46 @@
 import React from "react";
 import {MainPanel} from "./MainPanel";
-import {MainMenu} from "./MainMenu";
+import {Menu} from "./Menu";
 import {PassCode} from "./PassCode";
 import {ImportWallet} from "./ImportWallet";
-import {NativeStackNavigationOptions} from "react-native-screens/native-stack";
+import {NativeStackNavigationOptions} from "@react-navigation/native-stack";
 import {Theme} from "../styles/theme";
+import {ParamListBase, RouteProp} from "@react-navigation/native";
 
 export interface Route {
     name: string
     component: React.FC
     active: boolean
-    options?:NativeStackNavigationOptions
+    options?: NativeStackNavigationOptions | ((props: { route: RouteProp<ParamListBase, string>; navigation: any; }) => NativeStackNavigationOptions)
 }
 
-interface RouterData{
-    isAuthorized:boolean
-    privateKeyExists:boolean
+interface RouterData {
+    isAuthorized: boolean
+    privateKeyExists: boolean
 }
 
-export const Router = (data:RouterData): Route[] => [
-/*    {
+export const Router = ({privateKeyExists,isAuthorized}: RouterData): Route[] => [
+    {
         name: "PassCode",
         component: PassCode,
-        active: !data.isAuthorized
+        active: !isAuthorized
     },
     {
-        name: "MainPanel",
-        component: MainPanel,
-        active: data.isAuthorized && data.privateKeyExists
-    },
-    {
-        name: "MainMenu",
-        component: MainMenu,
-        active: data.isAuthorized
+        name: "Menu",
+        component: Menu,
+        active: isAuthorized && !privateKeyExists
     },
     {
         name: "ImportWallet",
         component: ImportWallet,
-        active: data.isAuthorized
-    }*/
+        active: isAuthorized && !privateKeyExists
+    },
     {
         name: "MainPanel",
         component: MainPanel,
-        active: true,
-        options:{
-            statusBarColor:Theme.colors.Primary600,
+        active: isAuthorized && privateKeyExists,
+        options: {
+            statusBarColor: Theme.colors.Primary600,
         }
     }
 ]

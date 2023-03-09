@@ -104,7 +104,7 @@ const styles = StyleSheet.create<{
 }>({
     subtitleContainer: {},
     subtitleText: {
-        ...Typography.global.PassCodeText,
+        ...Typography.global.subtitleText,
         marginHorizontal: 60,
         marginVertical: 30
     },
@@ -112,7 +112,7 @@ const styles = StyleSheet.create<{
         backgroundColor:"white"
     },
     titleText: {
-        ...Typography.global.PassCodeText,
+        ...Typography.global.subtitleText,
         margin: 20
     }
 })

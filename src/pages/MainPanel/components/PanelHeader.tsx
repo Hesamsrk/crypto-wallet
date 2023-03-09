@@ -1,5 +1,5 @@
 import React from 'react';
-import {Dimensions, StatusBar, StyleSheet, Text, View} from "react-native";
+import {Alert, Dimensions, StatusBar, StyleSheet, Text, View} from "react-native";
 import {Theme} from "../../../styles/theme";
 import CalculatorLine from "../../../assets/material/calculatorLine.svg"
 import {faEye, faQrcode, faRightFromBracket} from "@fortawesome/free-solid-svg-icons";
@@ -7,8 +7,9 @@ import {FontAwesomeIcon} from "@fortawesome/react-native-fontawesome";
 import {Button} from "../../../components/UI/Button";
 import {Typography} from "../../../styles/typography";
 import {ButtonBase} from "../../../components/UI/ButtonBase";
-import {Currencies, Currency} from "../../../modules/currnecies/currencies";
+import {Currencies, Currency} from "../../../config/currencies";
 import {Util} from "../../../utils/global";
+import {removePrivateKey} from "../../../modules/hdwallet/key";
 
 const screenWidth = Dimensions.get('window').width;
 
@@ -30,7 +31,16 @@ export const PanelHeader: React.FC<PropTypes> = ({currency: SelectedCurrency}) =
         </View>
         <View style={styles.leftBox}>
             <View style={styles.topRow}>
-                <Button style={styles.ButtonExit} color={Theme.colors.Accent1}>
+                <Button style={styles.ButtonExit} color={Theme.colors.Accent1} onClick={() => {
+                    Alert.alert("Are you sure?",
+                        "Proceeding will remove this wallet key from your wallet and you will need to import it again the next time you need it.",
+                        [{text: "No, wait", style: "cancel"}, {
+                            text: "Im sure", style: "destructive", onPress: () => {
+                                removePrivateKey().then(() => {
+                                })
+                            }
+                        }],{cancelable:false})
+                }}>
                     <View style={styles.buttonExitInner}>
                         <FontAwesomeIcon style={styles.buttonExitIcon} size={15} color={Theme.colors.Gray500}
                                          icon={faRightFromBracket}/>

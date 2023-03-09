@@ -9,29 +9,40 @@ interface PropTypes {
     width?: number | string
     onClick?: () => void
     label?: string
-    labelStyle?:TextStyle
+    labelStyle?: TextStyle
+    children?: JSX.Element
+    disabled?: boolean
 }
 
-export const Button = (props: ViewProps & PropTypes) =>
-    <TouchableOpacity style={[styles.container,{backgroundColor:props.color || Theme.colors.Accent2,width:props.width}, props.style]}
-                      onPress={props.onClick}>
+export const Button = (props: ViewProps & PropTypes) => {
+    const containerStyles = [styles.container, {
+        backgroundColor: props.color || Theme.colors.Accent2,
+        width: props.width
+    }, (props.disabled ? {opacity: 0.5} : {}), props.style]
+    const Wrapper = ({children}) => (props.disabled ? <View style={containerStyles}>{children}</View> :
+        <TouchableOpacity style={containerStyles} onPress={props.onClick}>{children}</TouchableOpacity>)
+
+    return <Wrapper>
         {
-            props.label ? <Text style={[styles.title,{color:props.labelColor || Theme.colors.Text.Light},props.labelStyle]}>{props.label}</Text> : props.children
+            props.label ? <Text
+                style={[styles.title, {color: props.labelColor || Theme.colors.Text.Light}, props.labelStyle]}>{props.label}</Text> : props.children
         }
-    </TouchableOpacity>;
+    </Wrapper>
+}
 
 
 const styles = StyleSheet.create<{
     title: TextStyle
     container: ViewStyle
 }>({
-    container: {
-        paddingVertical: 18,
-        paddingHorizontal: 16,
-        borderRadius: 10,
-        justifyContent: "center",
-        alignItems: "center",
-    },
+    container:
+        {
+            paddingVertical: 18,
+            paddingHorizontal: 16,
+            borderRadius: 10,
+            justifyContent: "center",
+            alignItems: "center",
+        },
     title: Typography.create({
         fontSize: 20,
         textAlign: "center",

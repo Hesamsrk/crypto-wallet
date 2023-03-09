@@ -28,7 +28,7 @@ const create = (style: TextStyle, options?: { bold: boolean, italic: boolean }):
 
 
 const global = {
-    PassCodeText:create({
+    subtitleText:create({
         fontSize: 12,
         lineHeight:15,
         textAlign:"center",

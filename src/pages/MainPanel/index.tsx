@@ -1,21 +1,19 @@
 import {Page} from "../../components/layout/Page";
 import {PanelHeader} from "./components/PanelHeader";
 import {ScrollView, StyleSheet, Text, View} from "react-native";
-import {Currencies, Currency} from "../../modules/currnecies/currencies";
+import {Currencies, Currency} from "../../config/currencies";
 import {CurrencyCard} from "./components/CurrencyCard";
 import {useState} from "react";
 import {Typography} from "../../styles/typography";
 
 export const MainPanel = Page(() => {
-    const [selectedCurrency,setSelectedCurrency]= useState<Currency>(Currencies[0])
-
-
+    const [selectedCurrency,setSelectedCurrency]= useState<string>(Currencies[0].symbol)
     return <>
-        <PanelHeader currency={selectedCurrency}/>
+        <PanelHeader currency={Currencies.find(item=>item.symbol===selectedCurrency)}/>
         <ScrollView contentContainerStyle={styles.contentContainer}>
             <View style={{width:"100%"}}><Text style={styles.title}>Cryptocurrencies</Text></View>
             {
-                Currencies.map(currency=><CurrencyCard selected={currency.symbol===selectedCurrency.symbol} onSelect={()=>setSelectedCurrency(currency)} style={styles.card} currency={currency} key={currency.symbol}/>)
+                Currencies.map(currency=><CurrencyCard selected={currency.symbol===selectedCurrency} onSelect={()=>setSelectedCurrency(currency.symbol)} style={styles.card} currency={currency} key={currency.symbol}/>)
             }
             <View style={{width:"100%"}}><Text style={styles.title}>Platforms</Text></View>
         </ScrollView>

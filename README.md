@@ -29,7 +29,7 @@ The initial implementation is under development for Android and IOS devices, usi
 ---------------------------------------------------
 - The main menu loads in case there is no master seed defined in the storage:
 
-  <img alt="Demo page 3" width="250px" src="./docs/demo/page-mainMenu.png" />
+  <img alt="Demo page 3" width="250px" src="./docs/demo/page-menu.png" />
 ---------------------------------------------------
 - This page helps you to create a new wallet or import your already existing master seed:
 

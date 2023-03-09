@@ -1,16 +1,17 @@
 import React from 'react';
 import {Page} from "../components/layout/Page";
-import {Alert, StyleSheet, View, ViewStyle,} from "react-native";
+import { StyleSheet, View, ViewStyle,} from "react-native";
 import {Logo} from "../components/UI/Logo";
 import {Button} from "../components/UI/Button";
+import {} from '@react-navigation/native';
 
 
-export const MainMenu = Page(() => {
+export const Menu = Page(({navigation}) => {
     return (<>
         <View style={styles.centralContainer}>
             <Logo style={styles.logo}/>
             <Button label={"Import Wallet"} style={styles.button} onClick={()=>{
-                Alert.alert("Coming soon!","This functionality is not implemented yet!")
+                navigation.navigate("ImportWallet")
             }}/>
         </View>
     </>)
