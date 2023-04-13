@@ -9,7 +9,7 @@ const formatNumber = (number: number, precision: number,display?:boolean): strin
     return display===false?res.replace(/[0-9]/ig,"*"):res;
 }
 
-export const Util = {
+export const Tools = {
     range,
     formatNumber
 }

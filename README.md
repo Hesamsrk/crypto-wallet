@@ -14,7 +14,6 @@ A cross-platform cryptocurrency wallet for mobile devices featuring an alternati
 ## Implementation
 
 The initial implementation is under development for Android and IOS devices, using React‑native.
-
 ### Demo
 
 #### This is the initial design of the app pages:

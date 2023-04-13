@@ -1,7 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {Image, ImageStyle, StyleSheet, Text, TextStyle, TouchableOpacity, View, ViewStyle} from "react-native"
-import {Util} from "../../../utils/global";
-import {generatePrivateKey, readFileBase64, savePrivateKey} from "../../../modules/hdwallet/key";
+import {Tools} from "../../../utils/tools";
 import {Theme} from "../../../styles/theme";
 
 interface PropTypes {
@@ -16,7 +15,7 @@ export const Grid = ({imageUri, onPatternChange, dimension}: PropTypes) => {
 
 
     useEffect(() => {
-        setBoxData(Util.range(dimension).map(() => Util.range(dimension).map(() => 0)))
+        setBoxData(Tools.range(dimension).map(() => Tools.range(dimension).map(() => 0)))
         setPattern("")
     }, [dimension])
 
@@ -38,9 +37,9 @@ export const Grid = ({imageUri, onPatternChange, dimension}: PropTypes) => {
         <View style={styles.container}>
             <Image source={{uri: imageUri}} style={styles.background}/>
             {
-                boxData.length === dimension ? Util.range(dimension).map(i => <View key={i} style={styles.row}>
+                boxData.length === dimension ? Tools.range(dimension).map(i => <View key={i} style={styles.row}>
                     {
-                        Util.range(dimension).map(j => <TouchableOpacity key={j} style={{
+                        Tools.range(dimension).map(j => <TouchableOpacity key={j} style={{
                             ...styles.box,
                             backgroundColor: Theme.alpha(Theme.colors.Accent1, 0.1 * boxData[i][j], "hex")
                         }} onPress={() => updatePattern(i, j)}><Text

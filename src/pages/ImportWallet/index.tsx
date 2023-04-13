@@ -6,9 +6,10 @@ import {Theme} from "../../styles/theme";
 import {Button} from "../../components/UI/Button";
 import {RadioButton} from "../../components/UI/RadioButton";
 import {Grid} from "./components/Grid";
-import {generatePrivateKey, readFileBase64, savePrivateKey} from "../../modules/hdwallet/key";
+import {generateMasterSeed, readFileBase64, saveMasterSeed} from "../../utils/masterSeed";
 import {Configs} from "../../config";
 import {Typography} from "../../styles/typography";
+import {logger} from "../../utils/logger";
 
 
 export const ImportWallet = Page(
@@ -43,19 +44,19 @@ export const ImportWallet = Page(
                 try {
                     base64Image = await readFileBase64(imageUri)
                 } catch (e) {
-                    console.log(e)
+                    logger.log(e)
                     Alert.alert("Try again!","Failed to load the provided image.")
                     return
                 }
                 try {
-                    const PK = await generatePrivateKey({
+                    const PK = await generateMasterSeed({
                         base64Image,
                         pattern
                     })
-                    await savePrivateKey(PK, true)
+                    await saveMasterSeed(PK, true)
                 } catch (e) {
                     Alert.alert("Try again!","Failed to create the private key.")
-                    console.log(e)
+                    logger.log(e)
                 }
             }
             , [imageUri,pattern])

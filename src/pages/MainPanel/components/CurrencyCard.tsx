@@ -4,7 +4,7 @@ import {Currency} from "../../../config/currencies";
 import {Theme} from "../../../styles/theme";
 import {useShake} from "../../../hooks/useShake";
 import {Typography} from "../../../styles/typography";
-import {Util} from "../../../utils/global";
+import {Tools} from "../../../utils/tools";
 import {useHookstate} from "@hookstate/core";
 import {Store} from "../../../store";
 interface PropTypes{
@@ -26,14 +26,14 @@ export const CurrencyCard: React.FC<PropTypes & ViewProps> = ({currency:Currency
                     {Currency.name}
                 </Text>
                 <Text style={styles.price}>
-                    {`${Util.formatNumber(Currency.getPrice(),2)} $`}
+                    {`${Tools.formatNumber(Currency.getPrice(),2)} $`}
                 </Text>
                 <Text style={[styles.change,{color:Currency.getChange()>0?Theme.colors.Accent2:Theme.colors.Accent1}]}>
-                    {`${Currency.getChange()>0? "+": "-"} ${Util.formatNumber(Math.abs(Currency.getChange()),2)}%`}
+                    {`${Currency.getChange()>0? "+": "-"} ${Tools.formatNumber(Math.abs(Currency.getChange()),2)}%`}
                 </Text>
                 <View style={styles.amountContainer}>
                     <Text style={styles.amount}>
-                        {Util.formatNumber(Currency.getAmount(),Currency.precision,displayNumbers)}
+                        {Tools.formatNumber(Currency.getAmount(),Currency.precision,displayNumbers)}
                     </Text>
                     <Text style={styles.symbol}>
                         {Currency.symbol}

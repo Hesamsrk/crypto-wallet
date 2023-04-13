@@ -1,5 +1,6 @@
 import * as LocalAuthentication from "expo-local-authentication";
 import {Alert} from "react-native";
+import {logger} from "../../utils/logger";
 
 export async function fingerPrintAuth(): Promise<boolean> {
     const hasHardware = await LocalAuthentication.hasHardwareAsync()
@@ -25,10 +26,10 @@ export async function fingerPrintAuth(): Promise<boolean> {
         fallbackLabel:"Use passcode"
     })) as {error:boolean,success:boolean,warning:boolean}
     if(res.error){
-        console.log("Auth Error:",res.error)
+        logger.log("Auth Error:",res.error)
         return false
     }
-    console.log("Auth Warning:",res.warning)
+    logger.log("Auth Warning:",res.warning)
 
     return res.success
 }

@@ -21,7 +21,7 @@ export interface Currency {
 
 export const Currencies: Currency[] = [
     {
-        name:"TetherUS",
+        name:"TetherUS(TRC20)",
         symbol:"USDT",
         precision:2,
         icon:USDTIcon,

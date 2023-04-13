@@ -8,8 +8,8 @@ import {Button} from "../../../components/UI/Button";
 import {Typography} from "../../../styles/typography";
 import {ButtonBase} from "../../../components/UI/ButtonBase";
 import {Currencies, Currency} from "../../../config/currencies";
-import {Util} from "../../../utils/global";
-import {removePrivateKey} from "../../../modules/hdwallet/key";
+import {Tools} from "../../../utils/tools";
+import {removeMasterSeed} from "../../../utils/masterSeed";
 import {useHookstate} from "@hookstate/core";
 import {Store} from "../../../store";
 
@@ -41,7 +41,7 @@ export const PanelHeader: React.FC<PropTypes> = ({currency: SelectedCurrency}) =
                         "Proceeding will remove this wallet key from your wallet and you will need to import it again the next time you need it.",
                         [{text: "No, wait", style: "cancel"}, {
                             text: "Im sure", style: "destructive", onPress: () => {
-                                removePrivateKey().then(() => {
+                                removeMasterSeed().then(() => {
                                 })
                             }
                         }], {cancelable: false})
@@ -58,18 +58,18 @@ export const PanelHeader: React.FC<PropTypes> = ({currency: SelectedCurrency}) =
                 <View style={styles.calculatorRow}>
                     <Text style={styles.calculatorKey}>Amount</Text>
                     <Text
-                        style={styles.calculatorValue}>{`${Util.formatNumber(SelectedCurrency.getAmount(), SelectedCurrency.precision, displayNumbers)} ${SelectedCurrency.symbol}`}</Text>
+                        style={styles.calculatorValue}>{`${Tools.formatNumber(SelectedCurrency.getAmount(), SelectedCurrency.precision, displayNumbers)} ${SelectedCurrency.symbol}`}</Text>
                 </View>
                 <View style={styles.calculatorRow}>
                     <Text style={styles.calculatorKey}>Price</Text>
                     <Text
-                        style={styles.calculatorValue}>{`${Util.formatNumber(SelectedCurrency.getPrice(), 2)} $`}</Text>
+                        style={styles.calculatorValue}>{`${Tools.formatNumber(SelectedCurrency.getPrice(), 2)} $`}</Text>
                 </View>
                 <CalculatorLine width={"100%"} height={12}/>
                 <View style={styles.calculatorRow}>
                     <Text style={styles.calculatorKey}>Total</Text>
                     <Text
-                        style={styles.calculatorValue}>{`${Util.formatNumber(SelectedCurrency.getPrice() * SelectedCurrency.getAmount(), 2, displayNumbers)} $`}</Text>
+                        style={styles.calculatorValue}>{`${Tools.formatNumber(SelectedCurrency.getPrice() * SelectedCurrency.getAmount(), 2, displayNumbers)} $`}</Text>
                 </View>
                 <View style={styles.buttonRow}>
                     <Button style={styles.transferButton} labelStyle={styles.transferButtonLabel}
@@ -81,9 +81,9 @@ export const PanelHeader: React.FC<PropTypes> = ({currency: SelectedCurrency}) =
             <Text style={styles.footerTitle}>Total Assets</Text>
         </View>
         <View style={styles.footer}>
-            <View><Text style={styles.totalUSD}>{`${Util.formatNumber(Total, 2, displayNumbers)} $`}</Text></View>
+            <View><Text style={styles.totalUSD}>{`${Tools.formatNumber(Total, 2, displayNumbers)} $`}</Text></View>
             {BTC && <View><Text
-                style={styles.totalBTC}>{`${Util.formatNumber(Total / BTC.getPrice(), BTC.precision, displayNumbers)} ${BTC.symbol}`}</Text></View>}
+                style={styles.totalBTC}>{`${Tools.formatNumber(Total / BTC.getPrice(), BTC.precision, displayNumbers)} ${BTC.symbol}`}</Text></View>}
             <ButtonBase style={styles.eyeButton} onClick={()=>{
                 hookState.displayNumbers.set(old=>!old)
             }}>
