@@ -2,12 +2,11 @@ import Constants from "expo-constants";
 
 export const Configs = {
     DEV_MODE: false,
-    COINBASE_API_TOKEN:Constants.expoConfig?.extra?.env?.COINBASE_API_TOKEN || "",
     MINIMUM_PATTERN_LENGTH:8,
     SERVICES:{
         backend:{
             baseURL:"http://localhost:9090",
-            authToken:"3b41f8f3e68a2d6eb1a37c5908e08f5c"
+            authToken:Constants.CW_AUTH_TOKEN
         }
     }
 }

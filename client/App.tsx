@@ -10,12 +10,15 @@ import {Store} from "./src/store";
 import {Theme} from "./src/styles/theme";
 import {Router} from "./src/pages/router";
 import {QueryClient, QueryClientProvider} from "react-query";
+import {Configs} from "./src/config";
+
 
 SplashScreen.preventAutoHideAsync();
 
 const Stack = createNativeStackNavigator();
 const queryClient = new QueryClient()
 
+console.log({Configs})
 
 const App = () => {
     let {privateKeyLoaded, passCodeLoaded} = useStorageLoader()

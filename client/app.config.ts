@@ -1,7 +1,8 @@
 import {ConfigContext, ExpoConfig} from 'expo/config';
 import {config} from "dotenv"
-config()
 
+config()
+const env = Object.fromEntries(Object.entries(process.env).filter(([key, value]) => key.startsWith("CW_")))
 export default ({config}: ConfigContext): ExpoConfig => ({
     ...config,
     name: "crypto-wallet",
@@ -37,6 +38,7 @@ export default ({config}: ConfigContext): ExpoConfig => ({
     extra: {
         eas: {
             projectId: "f03908de-08bb-4f0f-93b3-e16c69ce9fae",
+            env
         }
     },
     owner: "hesamsrk"

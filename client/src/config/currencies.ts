@@ -18,7 +18,7 @@ export interface Currency {
     getPrice: () => number
     getAmount: () => number
     getChange: () => number
-    disabled?:boolean
+    disabled?: boolean
 }
 
 export const Currencies: Currency[] = [
@@ -32,6 +32,14 @@ export const Currencies: Currency[] = [
         getChange: () => (-5.612361236),
     },
     {
+        name: "Testnet",
+        symbol: "BTCT",
+        precision: 2,
+        icon: BTCTIcon,
+        getPrice: () => (52000.3112361236),
+        getAmount: () => (12.1261236),
+        getChange: () => (-5.612361236),
+    }, {
         name: "Ethereum",
         symbol: "ETH",
         precision: 2,
@@ -41,15 +49,6 @@ export const Currencies: Currency[] = [
         getChange: () => (+0.51236126),
     },
     {
-        name: "Bitcoin(Testnet)",
-        symbol: "BTCT",
-        precision: 2,
-        icon: BTCTIcon,
-        getPrice: () => (52000.3112361236),
-        getAmount: () => (12.1261236),
-        getChange: () => (-5.612361236),
-    },
-    {
         name: "TetherUS(TRC20)",
         symbol: "USDT",
         precision: 2,
@@ -57,7 +56,7 @@ export const Currencies: Currency[] = [
         getPrice: () => (1200.51261236),
         getAmount: () => (12.1236123612),
         getChange: () => (+5.61235235),
-        disabled:true
+        disabled: true
     },
     {
         name: "Binance",
@@ -67,7 +66,7 @@ export const Currencies: Currency[] = [
         getPrice: () => (340),
         getAmount: () => (15125),
         getChange: () => (-2.43),
-        disabled:true
+        disabled: true
     },
     {
         name: "Tron",
@@ -77,7 +76,7 @@ export const Currencies: Currency[] = [
         getPrice: () => (0.03),
         getAmount: () => (12),
         getChange: () => (+1.01),
-        disabled:true
+        disabled: true
     },
     {
         name: "Doge Coin",
@@ -87,7 +86,7 @@ export const Currencies: Currency[] = [
         getPrice: () => (0.00041),
         getAmount: () => (4124),
         getChange: () => (-0.05),
-        disabled:true
+        disabled: true
     },
 ]
 

@@ -20,23 +20,23 @@ The initial implementation is under development for Android and IOS devices, usi
 
 - The splash Page:
 
-  <img alt="Demo page 1" width="250px" src="./docs/demo/splash.png" />
+  <img alt="Demo page 1" width="250px" src="client/docs/demo/splash.png" />
 ---------------------------------------------------
 - The authentication page:
 
-  <img alt="Demo page 2" width="250px" src="./docs/demo/page-passCode.png" />
+  <img alt="Demo page 2" width="250px" src="client/docs/demo/page-passCode.png" />
 ---------------------------------------------------
 - The main menu loads in case there is no master seed defined in the storage:
 
-  <img alt="Demo page 3" width="250px" src="./docs/demo/page-menu.png" />
+  <img alt="Demo page 3" width="250px" src="client/docs/demo/page-menu.png" />
 ---------------------------------------------------
 - This page helps you to create a new wallet or import your already existing master seed:
 
-  <img alt="Demo page 4" width="250px" src="./docs/demo/page-importWallet.png" />
+  <img alt="Demo page 4" width="250px" src="client/docs/demo/page-importWallet.png" />
 ---------------------------------------------------
 - This is the main panel of the app. Here you can see your assets and their values; you can also transfer your assets in this page or share your public-keys with the payers:
 
-  <img alt="Demo page 5" width="250px" src="./docs/demo/page-mainPanel.png" />
+  <img alt="Demo page 5" width="250px" src="client/docs/demo/page-mainPanel.png" />
 ---------------------------------------------------
 
 ### How to run in development environment?

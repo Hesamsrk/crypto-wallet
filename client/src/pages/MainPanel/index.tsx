@@ -3,17 +3,12 @@ import {PanelHeader} from "./components/PanelHeader";
 import {ScrollView, StyleSheet, Text, View} from "react-native";
 import {Currencies} from "../../config/currencies";
 import {CurrencyCard} from "./components/CurrencyCard";
-import {useEffect, useState} from "react";
+import {useState} from "react";
 import {Typography} from "../../styles/typography";
-import {getWallet} from "../../../server/modules/wallet/HDWallet";
 
 export const MainPanel = Page(() => {
     const [selectedCurrency, setSelectedCurrency] = useState<string>(Currencies[0].symbol)
     const selectedCurrencyBody = Currencies.find(item => item.symbol === selectedCurrency)
-    useEffect(()=>{
-        const wallet = getWallet()
-        console.log({wallet})
-    },[])
 
     return <>
         <PanelHeader currency={selectedCurrencyBody}/>
@@ -22,7 +17,7 @@ export const MainPanel = Page(() => {
             {
                 Currencies.map(currency => <CurrencyCard selected={currency.symbol === selectedCurrency}
                                                          onSelect={() => setSelectedCurrency(currency.symbol)}
-                                                         style={styles.card} currency={currency}
+                                                         style={styles.card} currency={currency} disabled={currency.disabled}
                                                          key={currency.symbol}/>)
             }
             <View style={{width: "100%"}}><Text style={styles.title}>Platforms</Text></View>
