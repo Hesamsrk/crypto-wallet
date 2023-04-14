@@ -7,8 +7,8 @@ import {logger} from "./logger";
 
 export const readFileBase64 = async (path: string) => await FileSystem.readAsStringAsync(path, {encoding: "base64"})
 
-const hashFunctionLevel1 = (input: string) => Crypto.digestStringAsync(CryptoDigestAlgorithm.SHA512, input, {encoding: CryptoEncoding.HEX})
-const hashFunctionLevel2 = (input: string) => Crypto.digestStringAsync(CryptoDigestAlgorithm.SHA512, input, {encoding: CryptoEncoding.HEX})
+const hashFunctionLevel1 = (input: string) => Crypto.digestStringAsync(CryptoDigestAlgorithm.SHA256, input, {encoding: CryptoEncoding.HEX})
+const hashFunctionLevel2 = (input: string) => Crypto.digestStringAsync(CryptoDigestAlgorithm.SHA256, input, {encoding: CryptoEncoding.BASE64})
 
 
 export const generateMasterSeed = async ({base64Image, pattern}: { base64Image: string, pattern: string }) => {

@@ -3,6 +3,7 @@ import {config} from "dotenv"
 
 config()
 const env = Object.fromEntries(Object.entries(process.env).filter(([key, value]) => key.startsWith("CW_")))
+console.log({env})
 export default ({config}: ConfigContext): ExpoConfig => ({
     ...config,
     name: "crypto-wallet",

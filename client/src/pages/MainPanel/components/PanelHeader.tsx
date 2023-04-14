@@ -2,7 +2,7 @@ import React from 'react';
 import {Alert, Dimensions, StatusBar, StyleSheet, Text, View} from "react-native";
 import {Theme} from "../../../styles/theme";
 import CalculatorLine from "../../../assets/material/calculatorLine.svg"
-import {faEye,faEyeSlash, faQrcode, faRightFromBracket} from "@fortawesome/free-solid-svg-icons";
+import {faEye,faEyeSlash, faRefresh, faRightFromBracket} from "@fortawesome/free-solid-svg-icons";
 import {FontAwesomeIcon} from "@fortawesome/react-native-fontawesome";
 import {Button} from "../../../components/UI/Button";
 import {Typography} from "../../../styles/typography";
@@ -17,9 +17,10 @@ const screenWidth = Dimensions.get('window').width;
 
 interface PropTypes {
     currency: Currency
+    onRefresh:()=>void
 }
 
-export const PanelHeader: React.FC<PropTypes> = ({currency: SelectedCurrency}) => {
+export const PanelHeader: React.FC<PropTypes> = ({currency: SelectedCurrency,onRefresh}) => {
     const hookState = useHookstate(Store)
     const displayNumbers = hookState.displayNumbers.get()
 
@@ -52,7 +53,7 @@ export const PanelHeader: React.FC<PropTypes> = ({currency: SelectedCurrency}) =
                         <Text style={styles.buttonExitText}>Exit Wallet</Text>
                     </View>
                 </Button>
-                <ButtonBase><FontAwesomeIcon size={35} color={Theme.colors.Gray500} icon={faQrcode}/></ButtonBase>
+                <ButtonBase onClick={()=>onRefresh()}><FontAwesomeIcon size={35} color={Theme.colors.Gray500} icon={faRefresh}/></ButtonBase>
             </View>
             <View style={styles.calculator}>
                 <View style={styles.calculatorRow}>

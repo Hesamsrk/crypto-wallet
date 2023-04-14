@@ -22,43 +22,39 @@ export const CurrencyCard: React.FC<PropTypes & ViewProps> = ({
                                                                   disabled,
                                                                   ...ViewProps
                                                               }) => {
-    const {shake, ShakeContainer} = useShake()
     const hookState = useHookstate(Store)
     const displayNumbers = hookState.displayNumbers.get()
-    return (<ShakeContainer>
-        <TouchableWithoutFeedback onPress={() => {
-            if (disabled) {
-                return
-            }
-            onSelect && onSelect()
-            shake()
-        }}><View {...ViewProps}
-                 style={[styles.container, ViewProps.style, (disabled ? styles.disabled : {}), (selected ? styles.selected : {})]}>
-            <View style={styles.contentBox}>
-                <Text style={styles.name}>
-                    {Currency.name}
+    return (<TouchableWithoutFeedback onPress={() => {
+        if (disabled) {
+            return
+        }
+        onSelect && onSelect()
+    }}><View {...ViewProps}
+             style={[styles.container, ViewProps.style, (disabled ? styles.disabled : {}), (selected ? styles.selected : {})]}>
+        <View style={styles.contentBox}>
+            <Text style={styles.name}>
+                {Currency.name}
+            </Text>
+            <Text style={styles.price}>
+                {`${Tools.formatNumber(Currency.getPrice(), 2)} $`}
+            </Text>
+            <Text
+                style={[styles.change, {color: Currency.getChange() > 0 ? Theme.colors.Accent2 : Theme.colors.Accent1}]}>
+                {`${Currency.getChange() > 0 ? "+" : "-"} ${Tools.formatNumber(Math.abs(Currency.getChange()), 2)}%`}
+            </Text>
+            <View style={styles.amountContainer}>
+                <Text style={styles.amount}>
+                    {Tools.formatNumber(Currency.getAmount(), Currency.precision, displayNumbers)}
                 </Text>
-                <Text style={styles.price}>
-                    {`${Tools.formatNumber(Currency.getPrice(), 2)} $`}
+                <Text style={styles.symbol}>
+                    {Currency.symbol}
                 </Text>
-                <Text
-                    style={[styles.change, {color: Currency.getChange() > 0 ? Theme.colors.Accent2 : Theme.colors.Accent1}]}>
-                    {`${Currency.getChange() > 0 ? "+" : "-"} ${Tools.formatNumber(Math.abs(Currency.getChange()), 2)}%`}
-                </Text>
-                <View style={styles.amountContainer}>
-                    <Text style={styles.amount}>
-                        {Tools.formatNumber(Currency.getAmount(), Currency.precision, displayNumbers)}
-                    </Text>
-                    <Text style={styles.symbol}>
-                        {Currency.symbol}
-                    </Text>
-                </View>
             </View>
-            <View style={styles.iconBox}>
-                <Currency.icon width={"100%"} height={"100%"}/>
-            </View>
-        </View></TouchableWithoutFeedback>
-    </ShakeContainer>)
+        </View>
+        <View style={styles.iconBox}>
+            <Currency.icon width={"100%"} height={"100%"}/>
+        </View>
+    </View></TouchableWithoutFeedback>)
 }
 
 

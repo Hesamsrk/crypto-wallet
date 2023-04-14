@@ -10,6 +10,7 @@ const app: Express = express();
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms'))
 app.use(express.urlencoded());
 app.use(express.json());
+app.get('/', (req, res) => res.send("This server is the back-end for crypto-wallet."));
 app.use((req, res, next) => {
     const auth_token = process.env.AUTH_TOKEN
     if (!auth_token) {
@@ -21,7 +22,7 @@ app.use((req, res, next) => {
     }
     next()
 })
-app.get('/', (req, res) => res.send("This server is the back-end for crypto-wallet."));
+// Authorization is needed from this point:
 app.use("/wallet", walletRouter)
 app.listen(port, () => {
     console.log(`⚡️[server]: Server is running at http://localhost:${port}`);

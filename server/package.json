@@ -4,9 +4,9 @@
   "description": "",
   "main": "index.ts",
   "scripts": {
-    "build": "npx tsc",
+    "build": "npx rimraf ./dist && npx tsc",
     "start": "node dist/index.js",
-    "dev": "concurrently \"npx tsc --watch\" \"nodemon -q ./dist/index.js\""
+    "dev": "concurrently \"npx rimraf ./dist && npx tsc --watch\" \"nodemon dist/index.js\""
   },
   "keywords": [],
   "author": "",

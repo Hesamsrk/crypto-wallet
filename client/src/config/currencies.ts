@@ -25,7 +25,7 @@ export const Currencies: Currency[] = [
     {
         name: "Bitcoin",
         symbol: "BTC",
-        precision: 2,
+        precision: 6,
         icon: BTCIcon,
         getPrice: () => (52000.3112361236),
         getAmount: () => (12.1261236),
@@ -34,7 +34,7 @@ export const Currencies: Currency[] = [
     {
         name: "Testnet",
         symbol: "BTCT",
-        precision: 2,
+        precision: 6,
         icon: BTCTIcon,
         getPrice: () => (52000.3112361236),
         getAmount: () => (12.1261236),
@@ -42,10 +42,10 @@ export const Currencies: Currency[] = [
     }, {
         name: "Ethereum",
         symbol: "ETH",
-        precision: 2,
+        precision: 5,
         icon: ETHIcon,
         getPrice: () => (1200.612361263),
-        getAmount: () => (5125.126236),
+        getAmount: () => (5.126236),
         getChange: () => (+0.51236126),
     },
     {

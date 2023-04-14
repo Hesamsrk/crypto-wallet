@@ -54,4 +54,26 @@ export const getWallet = async (masterSeed: string, accountID: number = 0): Prom
     }
 }
 
+function isValidBase64(str: string): boolean {
+    if (str === '' || str.trim() === '') {
+        return false;
+    }
+    try {
+        const decodedStr = atob(str);
+        const base64Regex = /^([0-9a-zA-Z+/]{4})*(([0-9a-zA-Z+/]{2}==)|([0-9a-zA-Z+/]{3}=))?$/;
+        return base64Regex.test(str) && btoa(decodedStr) === str;
+    } catch (err) {
+        return false;
+    }
+}
 
+export function isValidEntropyForBip39(entropy: string): boolean {
+
+    if(!isValidBase64(entropy)){
+        return false
+    }
+
+    const buf = Buffer.from(entropy, 'base64');
+    const len = buf.length * 8;
+    return len >= 128 && len % 32 === 0 && len <= 256;
+}

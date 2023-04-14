@@ -18,7 +18,6 @@ SplashScreen.preventAutoHideAsync();
 const Stack = createNativeStackNavigator();
 const queryClient = new QueryClient()
 
-console.log({Configs})
 
 const App = () => {
     let {privateKeyLoaded, passCodeLoaded} = useStorageLoader()
