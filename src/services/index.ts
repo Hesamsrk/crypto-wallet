@@ -1,20 +1,17 @@
-import {Axios, Method} from "axios";
+import {QueryKey, useQuery, UseQueryOptions} from "react-query";
+import {AxiosInstance} from "axios";
 
-
-export class Endpoint<OT> {
-    private readonly url: string
-    private readonly params: { [key: string]: string }
-    private readonly method: Method
-    private AX: Axios
-
-    constructor(config: { url: string, params?: { [p: string]: string }, method: Method, axios: Axios }) {
-        this.url = config.url;
-        this.params = config.params;
-        this.method = config.method;
-        this.AX = config.axios
-    }
-
-    fetch = () => {
-        return this.AX.request<OT>({url: this.url, params: this.params, method: this.method})
-    }
+export function generateQuery<IT = undefined, OT = undefined>(args: { queryKey: string, axios: { instance: AxiosInstance, path: string, method: "GET" | "POST"}, queryOptions?: Omit<UseQueryOptions<OT, undefined, IT, QueryKey>, "queryKey" | "queryFn"> }) {
+    return (variables: IT) => useQuery<OT, undefined, typeof variables>
+    (
+        args.queryKey,
+        async () => {
+            const data = (await args.axios.instance(args.axios.path, {
+                data: variables,
+                method: args.axios.method
+            })).data
+            console.log({data})
+            return data
+        },
+        args.queryOptions)
 }
