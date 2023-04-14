@@ -7,7 +7,7 @@ export const Configs = {
     SERVICES:{
         backend:{
             baseURL:"http://localhost:9090",
-            authToken:"3b45f8e3e68a0d6eb0a37c5908e08f5c"
+            authToken:"3b41f8f3e68a2d6eb1a37c5908e08f5c"
         }
     }
 }

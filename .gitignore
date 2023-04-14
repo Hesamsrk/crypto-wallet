@@ -62,4 +62,12 @@ buck-out/
 .expo/*
 web-build/
 
+# Environment variables
+.env
+
+# Server
+server/node_modules
+server/.env
+server/dist
+
 status.txt
