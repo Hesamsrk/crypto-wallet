@@ -9,6 +9,8 @@ import {useCryptoAddresses} from "../../services/backend/api";
 import {useHookstate} from "@hookstate/core";
 import {Store} from "../../store";
 import Spinner from 'react-native-loading-spinner-overlay';
+import {ReceiveModal} from "./components/ReceiveModal";
+import {SendModal} from "./components/SendModal";
 
 export const MainPanel = Page(() => {
     const hookState = useHookstate(Store)
@@ -20,17 +22,23 @@ export const MainPanel = Page(() => {
         isLoading: cryptoAddressesIsLoading,
         refetch,
         isError: cryptoAddressesIsError,
+        isSuccess
     } = useCryptoAddresses({masterSeed: privateKey, accountID: 0}, {
         onError: () => {
             Alert.alert("Error", "The process of fetching the wallet addresses has failed.")
         }
     })
+    const [openModal, setOpenModal] = useState<"close" | "Receive" | "Send">("close")
 
     return <>
         <Spinner visible={cryptoAddressesIsLoading}/>
+        <ReceiveModal onClose={() => setOpenModal("close")} open={openModal === "Receive"}
+                      publicKey={cryptoAddresses?.data[selectedCurrencyBody.symbol] || ""}/>
+        <SendModal onClose={() => setOpenModal("close")} open={openModal === "Send"}/>
         <PanelHeader currency={selectedCurrencyBody} onRefresh={() => {
             refetch()
-        }}/>
+        }} onReceiveClick={() => setOpenModal("Receive")}
+                     onSendClick={() => setOpenModal("Send")}/>
         <ScrollView contentContainerStyle={styles.contentContainer}>
             <View style={{width: "100%"}}><Text style={styles.title}>Cryptocurrencies</Text></View>
             {

@@ -5,6 +5,7 @@ import {Theme} from "./theme";
 const defaultTypography: TextStyle = {
     fontFamily: "Sansation-regular",
     color: Theme.colors.Text.Dark,
+    textAlignVertical:"center"
 }
 
 const create = (style: TextStyle, options?: { bold: boolean, italic: boolean }): TextStyle => {

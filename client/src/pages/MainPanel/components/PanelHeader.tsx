@@ -18,9 +18,11 @@ const screenWidth = Dimensions.get('window').width;
 interface PropTypes {
     currency: Currency
     onRefresh:()=>void
+    onReceiveClick:()=>void
+    onSendClick:()=>void
 }
 
-export const PanelHeader: React.FC<PropTypes> = ({currency: SelectedCurrency,onRefresh}) => {
+export const PanelHeader: React.FC<PropTypes> = ({currency: SelectedCurrency,onRefresh,onReceiveClick,onSendClick}) => {
     const hookState = useHookstate(Store)
     const displayNumbers = hookState.displayNumbers.get()
 
@@ -40,8 +42,8 @@ export const PanelHeader: React.FC<PropTypes> = ({currency: SelectedCurrency,onR
                 <Button style={styles.ButtonExit} color={Theme.colors.Accent1} onClick={() => {
                     Alert.alert("Are you sure?",
                         "Proceeding will remove this wallet key from your wallet and you will need to import it again the next time you need it.",
-                        [{text: "No, wait", style: "cancel"}, {
-                            text: "Im sure", style: "destructive", onPress: () => {
+                        [{publicKey: "No, wait", style: "cancel"}, {
+                            publicKey: "Im sure", style: "destructive", onPress: () => {
                                 removeMasterSeed().then(() => {
                                 })
                             }
@@ -74,9 +76,9 @@ export const PanelHeader: React.FC<PropTypes> = ({currency: SelectedCurrency,onR
                 </View>
                 <View style={styles.buttonRow}>
                     <Button style={styles.transferButton} labelStyle={styles.transferButtonLabel}
-                            color={Theme.colors.Accent1} label={"Send"}/>
+                            color={Theme.colors.Accent1} label={"Send"} onClick={()=>onSendClick()}/>
                     <Button style={styles.transferButton} labelStyle={styles.transferButtonLabel}
-                            color={Theme.colors.Accent2} label={"Receive"}/>
+                            color={Theme.colors.Accent2} label={"Receive"} onClick={()=>onReceiveClick()}/>
                 </View>
             </View>
             <Text style={styles.footerTitle}>Total Assets</Text>

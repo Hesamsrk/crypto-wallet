@@ -1,8 +1,8 @@
 import {QueryKey, useQuery, UseQueryOptions} from "react-query";
 import {AxiosError, AxiosInstance} from "axios";
 
-export function generateQuery<IT = undefined, OT = undefined>(args: { queryKey: string, axios: { instance: AxiosInstance, path: string, method: "GET" | "POST"}, queryOptions?: Omit<UseQueryOptions<OT, undefined, IT, QueryKey>, "queryKey" | "queryFn"> }) {
-    return (variables: IT,queryOptions?:Omit<UseQueryOptions<OT, undefined, IT, QueryKey>, "queryKey" | "queryFn">) => useQuery<OT, undefined, typeof variables>
+export function generateQuery<IT = undefined, OT = undefined>(args: { queryKey: string, axios: { instance: AxiosInstance, path: string, method: "GET" | "POST"}, queryOptions?: Omit<UseQueryOptions<OT, undefined, OT, QueryKey>, "queryKey" | "queryFn"> }) {
+    return (variables: IT,queryOptions?:typeof args.queryOptions) => useQuery<OT, undefined, OT>
     (
         args.queryKey,
         async () => {

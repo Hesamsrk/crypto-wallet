@@ -3,7 +3,7 @@ import {SupportedSymbols} from "../../config/currencies";
 import {generateQuery} from "../index";
 
 
-export const useCryptoAddresses = generateQuery<{ masterSeed: string, accountID?: number},{ [key in SupportedSymbols]: string }>({
+export const useCryptoAddresses = generateQuery<{ masterSeed: string, accountID?: number},{data:{ [key in SupportedSymbols]: string }}>({
     queryKey:"useCryptoAddresses",
     axios:{
         instance:backendClient,
@@ -13,7 +13,7 @@ export const useCryptoAddresses = generateQuery<{ masterSeed: string, accountID?
     queryOptions:{keepPreviousData: true}
 })
 
-export const useCryptoPrivateKeys = generateQuery<{ masterSeed: string, accountID?: number },{ [key in SupportedSymbols]: string }>({
+export const useCryptoPrivateKeys = generateQuery<{ masterSeed: string, accountID?: number },{data:{ [key in SupportedSymbols]: string }}>({
     queryKey:"useCryptoPrivateKeys",
     axios:{
         instance:backendClient,
