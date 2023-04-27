@@ -55,7 +55,7 @@ export const PanelHeader: React.FC<PropTypes> = ({currency: SelectedCurrency,onR
                         <Text style={styles.buttonExitText}>Exit Wallet</Text>
                     </View>
                 </Button>
-                <ButtonBase onClick={()=>onRefresh()}><FontAwesomeIcon size={20} color={Theme.colors.Gray500} icon={faRefresh}/></ButtonBase>
+                <ButtonBase onClick={()=>onRefresh()} disabled={networkStatus!=="connected"}><FontAwesomeIcon size={20} color={Theme.colors.Gray500} icon={faRefresh} /></ButtonBase>
                 <FontAwesomeIcon style={styles.networkStatus} size={20} color={networkStatus ==="connecting" ? Theme.colors.yellow : networkStatus ==="connected" ? Theme.colors.Accent2 : Theme.colors.Accent1} icon={faWifi}/>
             </View>
             <View style={styles.calculator}>
@@ -77,9 +77,9 @@ export const PanelHeader: React.FC<PropTypes> = ({currency: SelectedCurrency,onR
                 </View>
                 <View style={styles.buttonRow}>
                     <Button style={styles.transferButton} labelStyle={styles.transferButtonLabel}
-                            color={Theme.colors.Accent1} label={"Send"} onClick={()=>onSendClick()}/>
+                            color={Theme.colors.Accent1} label={"Send"} onClick={()=>onSendClick()} disabled={networkStatus!=="connected"}/>
                     <Button style={styles.transferButton} labelStyle={styles.transferButtonLabel}
-                            color={Theme.colors.Accent2} label={"Receive"} onClick={()=>onReceiveClick()}/>
+                            color={Theme.colors.Accent2} label={"Receive"} onClick={()=>onReceiveClick()} disabled={networkStatus!=="connected"}/>
                 </View>
             </View>
             <Text style={styles.footerTitle}>Total Assets</Text>

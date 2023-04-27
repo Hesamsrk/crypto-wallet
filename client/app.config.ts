@@ -6,7 +6,7 @@ const env = Object.fromEntries(Object.entries(process.env).filter(([key, value])
 console.log({env})
 
 const config: ExpoConfig = {
-    name: 'crypto-wallet',
+    name: 'Crypto Wallet',
     slug: 'crypto-wallet',
     version: "1.0.0",
     primaryColor: "#1C2541",

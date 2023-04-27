@@ -73,7 +73,7 @@ export const ImportWallet = Page(
             <View style={styles.footer}>
                 <View style={{flexDirection: "row", justifyContent: "space-around"}}>
                     {
-                        [3, 4, 5].map((item) => <RadioButton color={Theme.colors.Gray600} label={`${item}X${item}`}
+                        [3, 4, 5].map((item) => <RadioButton key={item} color={Theme.colors.Gray600} label={`${item}X${item}`}
                                                              onSelect={() => setGridDimension(item)}
                                                              labelColor={Theme.colors.Gray600}
                                                              selected={item === gridDimension}/>)

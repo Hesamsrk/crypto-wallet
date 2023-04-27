@@ -1,5 +1,5 @@
 import React, {PropsWithChildren} from 'react';
-import {Alert, StyleSheet, Text, ToastAndroid, TouchableOpacity, View} from 'react-native';
+import { StyleSheet, Text, ToastAndroid, TouchableOpacity, View} from 'react-native';
 import {UIModal} from "../../../components/UI/UIModal";
 import QRCode from 'react-native-qrcode-svg';
 import {Theme} from "../../../styles/theme";
@@ -7,14 +7,19 @@ import {Typography} from "../../../styles/typography";
 import {faCopy} from "@fortawesome/free-solid-svg-icons";
 import {FontAwesomeIcon} from "@fortawesome/react-native-fontawesome";
 import {setStringAsync} from 'expo-clipboard';
+import {Currencies} from "../../../config/currencies";
+
 interface PropTypes {
     onClose: () => void
     open: boolean
     publicKey: string
+    selectedCurrency:string
 }
 
 export const ReceiveModal: React.FC<PropsWithChildren<PropTypes>> = (props) => {
-    return <UIModal title={"Receive Assets"} onClose={props.onClose} open={props.open}>
+    const selectedCurrencyBody = Currencies.find(item => item.symbol === props.selectedCurrency)
+
+    return <UIModal title={`Receive ${selectedCurrencyBody.symbol}`} onClose={props.onClose} open={props.open}>
         <View style={styles.container}>
             <View style={styles.qrContainer}>
                 <QRCode backgroundColor={Theme.colors.Gray600} color={Theme.colors.Primary600} value={props.publicKey} size={200} ecl={"Q"}/>

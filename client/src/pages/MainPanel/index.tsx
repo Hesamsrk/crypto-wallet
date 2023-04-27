@@ -41,10 +41,10 @@ export const MainPanel = Page(() => {
     },[connected])
 
     return <>
-        <Spinner visible={cryptoAddressesIsLoading}/>
-        <ReceiveModal onClose={() => setOpenModal("close")} open={openModal === "Receive"}
-                      publicKey={cryptoAddresses?.data[selectedCurrencyBody.symbol] || ""}/>
-        <SendModal onClose={() => setOpenModal("close")} open={openModal === "Send"}/>
+        <Spinner visible={connected && cryptoAddressesIsLoading}/>
+        {openModal === "Receive" && <ReceiveModal onClose={() => setOpenModal("close")} open={openModal === "Receive"} selectedCurrency={selectedCurrency}
+                       publicKey={cryptoAddresses?.data[selectedCurrencyBody.symbol] || ""}/>}
+        {openModal === "Send" && <SendModal onClose={() => setOpenModal("close")} open={openModal === "Send"} selectedCurrency={selectedCurrency}/>}
         <PanelHeader currency={selectedCurrencyBody} onRefresh={() => {
             refetch().then(()=>Alert.alert("Done","Data refreshed successfully!"))
         }} onReceiveClick={() => setOpenModal("Receive")}

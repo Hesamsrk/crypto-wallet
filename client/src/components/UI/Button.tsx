@@ -1,5 +1,5 @@
-import React from "react";
-import {StyleSheet, Text, TextStyle, TouchableOpacity, View, ViewProps, ViewStyle} from "react-native";
+import React, {PropsWithChildren} from "react";
+import {StyleProp, StyleSheet, Text, TextStyle, TouchableOpacity, View, ViewProps, ViewStyle} from "react-native";
 import {Theme} from "../../styles/theme";
 import {Typography} from "../../styles/typography";
 
@@ -15,25 +15,24 @@ interface PropTypes {
 }
 
 export const Button = (props: ViewProps & PropTypes) => {
-    const containerStyles = [styles.container, {
+    const containerStyles = [styles.container,[props.disabled ? styles.disabled : {}], {
         backgroundColor: props.color || Theme.colors.Accent2,
         width: props.width
-    }, (props.disabled ? {opacity: 0.5} : {}), props.style]
-    const Wrapper = ({children}) => (props.disabled ? <View style={containerStyles}>{children}</View> :
-        <TouchableOpacity style={containerStyles} onPress={props.onClick}>{children}</TouchableOpacity>)
+    }, props.style]
 
-    return <Wrapper>
+    return <TouchableOpacity onPress={props.disabled===true?()=>{}:props.onClick} style={containerStyles}>
         {
             props.label ? <Text
                 style={[styles.title, {color: props.labelColor || Theme.colors.Text.Light}, props.labelStyle]}>{props.label}</Text> : props.children
         }
-    </Wrapper>
+    </TouchableOpacity>
 }
 
 
 const styles = StyleSheet.create<{
     title: TextStyle
     container: ViewStyle
+    disabled: ViewStyle
 }>({
     container:
         {
@@ -47,4 +46,7 @@ const styles = StyleSheet.create<{
         fontSize: 20,
         textAlign: "center",
     }),
+    disabled: {
+        opacity: 0.5
+    }
 })

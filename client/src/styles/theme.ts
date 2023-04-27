@@ -1,6 +1,7 @@
 const colors = {
     Primary600: "#0B132B",
     Primary500: "#1C2541",
+    Primary400: "#3c5bb0",
     Accent1: "#AE2546",
     Accent2: "#138A7C",
     yellow:"#ffaa13",
@@ -11,7 +12,8 @@ const colors = {
         Light:"#FFFFFF",
         Dark:"#0E1821"
     },
-    Black:"#000"
+    Black:"#000",
+    Transparent:"rgba(0,0,0,0)"
 }
 
 interface RGB {
