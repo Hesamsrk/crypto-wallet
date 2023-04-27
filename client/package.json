@@ -42,7 +42,7 @@
   },
   "scripts": {
     "start": "expo start",
-    "start:offline": "expo start --offline",
+    "start:offline": "expo start --offline -c",
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web"

@@ -10,7 +10,6 @@ import {Store} from "./src/store";
 import {Theme} from "./src/styles/theme";
 import {Router} from "./src/pages/router";
 import {QueryClient, QueryClientProvider} from "react-query";
-import {Configs} from "./src/config";
 
 
 SplashScreen.preventAutoHideAsync();
@@ -30,7 +29,9 @@ const App = () => {
 
     const onLayoutRootView = useCallback(async () => {
         if (appLoaded) {
-            await SplashScreen.hideAsync();
+            setTimeout(()=>{
+                SplashScreen.hideAsync()
+            },3000);
         }
     }, [appLoaded])
 

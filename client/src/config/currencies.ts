@@ -1,12 +1,12 @@
 import {FC} from "react";
 import {SvgProps} from "react-native-svg";
-import BTCIcon from "../assets/symbols/BTC.svg"
-import BTCTIcon from "../assets/symbols/BTCT.svg"
-import BNBIcon from "../assets/symbols/BNB.svg"
-import DOGEIcon from "../assets/symbols/DOGE.svg"
-import ETHIcon from "../assets/symbols/ETH.svg"
-import TRXIcon from "../assets/symbols/TRX.svg"
-import USDTIcon from "../assets/symbols/USDT.svg"
+import BTCIcon from "../svg/symbols/BTC.svg"
+import BTCTIcon from "../svg/symbols/BTCT.svg"
+import BNBIcon from "../svg/symbols/BNB.svg"
+import DOGEIcon from "../svg/symbols/DOGE.svg"
+import ETHIcon from "../svg/symbols/ETH.svg"
+import TRXIcon from "../svg/symbols/TRX.svg"
+import USDTIcon from "../svg/symbols/USDT.svg"
 
 export type SupportedSymbols = "USDT" | "BTC" | "BTCT" | "ETH" | "BNB" | "TRX" | "DOGE"
 

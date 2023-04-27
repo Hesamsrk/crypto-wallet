@@ -22,3 +22,13 @@ export const useCryptoPrivateKeys = generateQuery<{ masterSeed: string, accountI
     },
     queryOptions:{keepPreviousData: true}
 })
+
+
+
+export const usePing = generateQuery<undefined,boolean>({
+    queryKey:"usePing",
+    axios:{
+        instance:backendClient,
+        method:"GET",
+        path:"/ping"
+    }})

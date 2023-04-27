@@ -56,7 +56,7 @@ const styles = StyleSheet.create({
         textAlign:"center"
     }),
     publicKey: Typography.create({
-        fontSize: 15,
+        fontSize: 13,
         marginRight:5
     })
 });

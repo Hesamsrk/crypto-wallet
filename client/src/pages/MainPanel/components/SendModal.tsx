@@ -14,4 +14,6 @@ export const SendModal: React.FC<PropsWithChildren<PropTypes>> = (props) => {
     </UIModal>
 };
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+
+});

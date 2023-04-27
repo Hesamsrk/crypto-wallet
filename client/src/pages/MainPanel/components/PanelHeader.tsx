@@ -1,8 +1,8 @@
 import React from 'react';
 import {Alert, Dimensions, StatusBar, StyleSheet, Text, View} from "react-native";
 import {Theme} from "../../../styles/theme";
-import CalculatorLine from "../../../assets/material/calculatorLine.svg"
-import {faEye,faEyeSlash, faRefresh, faRightFromBracket} from "@fortawesome/free-solid-svg-icons";
+import CalculatorLine from "../../../svg/material/calculatorLine.svg"
+import {faEye,faEyeSlash, faRefresh, faRightFromBracket,faWifi} from "@fortawesome/free-solid-svg-icons";
 import {FontAwesomeIcon} from "@fortawesome/react-native-fontawesome";
 import {Button} from "../../../components/UI/Button";
 import {Typography} from "../../../styles/typography";
@@ -32,7 +32,7 @@ export const PanelHeader: React.FC<PropTypes> = ({currency: SelectedCurrency,onR
     }
     let BTC = Currencies.find(c => c.symbol === "BTC")
 
-
+    const networkStatus = hookState.networkStatus.get()
     return (<View style={styles.container}>
         <View style={styles.iconBox}>
             <SelectedCurrency.icon width={"100%"} height={"100%"}/>
@@ -42,8 +42,8 @@ export const PanelHeader: React.FC<PropTypes> = ({currency: SelectedCurrency,onR
                 <Button style={styles.ButtonExit} color={Theme.colors.Accent1} onClick={() => {
                     Alert.alert("Are you sure?",
                         "Proceeding will remove this wallet key from your wallet and you will need to import it again the next time you need it.",
-                        [{publicKey: "No, wait", style: "cancel"}, {
-                            publicKey: "Im sure", style: "destructive", onPress: () => {
+                        [{text: "No, wait", style: "cancel"}, {
+                            text: "Im sure", style: "destructive", onPress: () => {
                                 removeMasterSeed().then(() => {
                                 })
                             }
@@ -55,7 +55,8 @@ export const PanelHeader: React.FC<PropTypes> = ({currency: SelectedCurrency,onR
                         <Text style={styles.buttonExitText}>Exit Wallet</Text>
                     </View>
                 </Button>
-                <ButtonBase onClick={()=>onRefresh()}><FontAwesomeIcon size={35} color={Theme.colors.Gray500} icon={faRefresh}/></ButtonBase>
+                <ButtonBase onClick={()=>onRefresh()}><FontAwesomeIcon size={20} color={Theme.colors.Gray500} icon={faRefresh}/></ButtonBase>
+                <FontAwesomeIcon style={styles.networkStatus} size={20} color={networkStatus ==="connecting" ? Theme.colors.yellow : networkStatus ==="connected" ? Theme.colors.Accent2 : Theme.colors.Accent1} icon={faWifi}/>
             </View>
             <View style={styles.calculator}>
                 <View style={styles.calculatorRow}>
@@ -239,5 +240,8 @@ const styles = StyleSheet.create({
     transferButtonLabel: Typography.create({
         fontSize: 14,
         color: Theme.colors.Gray500
-    })
+    }),
+    networkStatus:{
+        marginLeft:20
+    }
 })

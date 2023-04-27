@@ -3,14 +3,15 @@ import {PanelHeader} from "./components/PanelHeader";
 import {Alert, ScrollView, StyleSheet, Text, View} from "react-native";
 import {Currencies} from "../../config/currencies";
 import {CurrencyCard} from "./components/CurrencyCard";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import {Typography} from "../../styles/typography";
-import {useCryptoAddresses} from "../../services/backend/api";
+import {useCryptoAddresses, usePing} from "../../services/backend/api";
 import {useHookstate} from "@hookstate/core";
 import {Store} from "../../store";
 import Spinner from 'react-native-loading-spinner-overlay';
 import {ReceiveModal} from "./components/ReceiveModal";
 import {SendModal} from "./components/SendModal";
+import {logger} from "../../utils/logger";
 
 export const MainPanel = Page(() => {
     const hookState = useHookstate(Store)
@@ -28,7 +29,16 @@ export const MainPanel = Page(() => {
             Alert.alert("Error", "The process of fetching the wallet addresses has failed.")
         }
     })
+    const {data:connected} = usePing(undefined,{refetchOnMount:true,refetchOnReconnect:true,refetchInterval:500,refetchOnWindowFocus:true})
     const [openModal, setOpenModal] = useState<"close" | "Receive" | "Send">("close")
+
+    useEffect(()=>{
+        if(connected===true){
+            hookState.networkStatus.set("connected")
+        }else{
+            hookState.networkStatus.set("disconnected")
+        }
+    },[connected])
 
     return <>
         <Spinner visible={cryptoAddressesIsLoading}/>
@@ -36,7 +46,7 @@ export const MainPanel = Page(() => {
                       publicKey={cryptoAddresses?.data[selectedCurrencyBody.symbol] || ""}/>
         <SendModal onClose={() => setOpenModal("close")} open={openModal === "Send"}/>
         <PanelHeader currency={selectedCurrencyBody} onRefresh={() => {
-            refetch()
+            refetch().then(()=>Alert.alert("Done","Data refreshed successfully!"))
         }} onReceiveClick={() => setOpenModal("Receive")}
                      onSendClick={() => setOpenModal("Send")}/>
         <ScrollView contentContainerStyle={styles.contentContainer}>

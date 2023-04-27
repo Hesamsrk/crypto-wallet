@@ -3,6 +3,7 @@ const colors = {
     Primary500: "#1C2541",
     Accent1: "#AE2546",
     Accent2: "#138A7C",
+    yellow:"#ffaa13",
     Background: "#FFFFFF",
     Gray600: "#D9D9D9",
     Gray500: "#F1F1F1",

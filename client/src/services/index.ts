@@ -1,8 +1,9 @@
 import {QueryKey, useQuery, UseQueryOptions} from "react-query";
 import {AxiosError, AxiosInstance} from "axios";
+import {logger} from "../utils/logger";
 
 export function generateQuery<IT = undefined, OT = undefined>(args: { queryKey: string, axios: { instance: AxiosInstance, path: string, method: "GET" | "POST"}, queryOptions?: Omit<UseQueryOptions<OT, undefined, OT, QueryKey>, "queryKey" | "queryFn"> }) {
-    return (variables: IT,queryOptions?:typeof args.queryOptions) => useQuery<OT, undefined, OT>
+    return (variables?: IT,queryOptions?:typeof args.queryOptions) => useQuery<OT, undefined, OT>
     (
         args.queryKey,
         async () => {
@@ -14,7 +15,7 @@ export function generateQuery<IT = undefined, OT = undefined>(args: { queryKey: 
                 })).data
             }catch (e){
                 const error = e as AxiosError
-                console.error("Network error status:",error.status)
+                logger.error("Network error status:",error.status)
             }
             return data
         },{

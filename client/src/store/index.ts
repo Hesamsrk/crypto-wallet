@@ -5,6 +5,7 @@ interface IStore {
     passCode:string
     authenticated:boolean
     displayNumbers:boolean
+    networkStatus: "connecting" | "connected" | "disconnected"
 }
 
 
@@ -12,7 +13,8 @@ export const Store = hookstate<IStore>({
     privateKey: "",
     passCode:"",
     authenticated:false,
-    displayNumbers:true
+    displayNumbers:true,
+    networkStatus: "connecting"
 });
 
 
