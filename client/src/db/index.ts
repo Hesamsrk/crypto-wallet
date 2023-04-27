@@ -8,12 +8,14 @@ export const db = {
     },
     get: async (key: string) => {
         let result = await SecureStore.getItemAsync(key) || "";
-        logger.log(`db.get("${key}"): ${result}`);;
+        logger.log(`db.get("${key}"): ${result}`);
         return result
     },
     keys: {
         PRIVATE_KEY: "private-key",
-        PASS_CODE:"pass-code"
+        PASS_CODE:"pass-code",
+        BACK_END_HOST:"back-end-host",
+        BACK_END_AUTH:"back-end-auth"
     }
 }
 

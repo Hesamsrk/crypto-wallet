@@ -1,25 +1,26 @@
 import {QueryKey, useQuery, UseQueryOptions} from "react-query";
-import {AxiosError, AxiosInstance} from "axios";
+import {AxiosError, AxiosInstance, AxiosRequestConfig} from "axios";
 import {logger} from "../utils/logger";
 
-export function generateQuery<IT = undefined, OT = undefined>(args: { queryKey: string, axios: { instance: AxiosInstance, path: string, method: "GET" | "POST"}, queryOptions?: Omit<UseQueryOptions<OT, undefined, OT, QueryKey>, "queryKey" | "queryFn"> }) {
-    return (variables?: IT,queryOptions?:typeof args.queryOptions) => useQuery<OT, undefined, OT>
+export function generateQuery<IT = undefined, OT = undefined>(args: { queryKey: string, axios: { config?: AxiosRequestConfig<IT>, path: string, method: "GET" | "POST" }, queryOptions?: Omit<UseQueryOptions<OT, undefined, OT, QueryKey>, "queryKey" | "queryFn"> }) {
+    return (options:{instance: AxiosInstance, variables?: IT, queryOptions?: typeof args.queryOptions}) => useQuery<OT, undefined, OT>
     (
         args.queryKey,
         async () => {
-            let data:OT = undefined
-            try{
-                data = (await args.axios.instance(args.axios.path, {
-                    data: variables,
-                    method: args.axios.method
+            let data: OT = undefined
+            try {
+                data = (await options.instance(args.axios.path, {
+                    data: options.variables,
+                    method: args.axios.method,
+                    ...(args.axios.config || {}),
                 })).data
-            }catch (e){
+            } catch (e) {
                 const error = e as AxiosError
-                logger.error("Network error status:",error.status)
+                logger.error("Network error status:", error.status)
             }
             return data
-        },{
+        }, {
             ...args.queryOptions,
-            ...queryOptions
+            ...options.queryOptions
         })
 }

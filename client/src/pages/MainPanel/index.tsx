@@ -3,7 +3,7 @@ import {PanelHeader} from "./components/PanelHeader";
 import {Alert, ScrollView, StyleSheet, Text, View} from "react-native";
 import {Currencies} from "../../config/currencies";
 import {CurrencyCard} from "./components/CurrencyCard";
-import {useEffect, useState} from "react";
+import {useState} from "react";
 import {Typography} from "../../styles/typography";
 import {useCryptoAddresses, usePing} from "../../services/backend/api";
 import {useHookstate} from "@hookstate/core";
@@ -11,10 +11,13 @@ import {Store} from "../../store";
 import Spinner from 'react-native-loading-spinner-overlay';
 import {ReceiveModal} from "./components/ReceiveModal";
 import {SendModal} from "./components/SendModal";
-import {logger} from "../../utils/logger";
+import {backendClient} from "../../services/backend/client";
+import {NetworkModal} from "./components/NetworkModal";
 
 export const MainPanel = Page(() => {
     const hookState = useHookstate(Store)
+    const backend = hookState.backend.get()
+    console.log({backend})
     const privateKey = hookState.privateKey.get()
     const [selectedCurrency, setSelectedCurrency] = useState<string>(Currencies[0].symbol)
     const selectedCurrencyBody = Currencies.find(item => item.symbol === selectedCurrency)
@@ -22,31 +25,36 @@ export const MainPanel = Page(() => {
         data: cryptoAddresses,
         isLoading: cryptoAddressesIsLoading,
         refetch,
-        isError: cryptoAddressesIsError,
-        isSuccess
-    } = useCryptoAddresses({masterSeed: privateKey, accountID: 0}, {
-        onError: () => {
-            Alert.alert("Error", "The process of fetching the wallet addresses has failed.")
+    } = useCryptoAddresses({
+        instance: backendClient(backend), variables: {masterSeed: privateKey, accountID: 0}
+    })
+
+    usePing({
+        instance: backendClient(backend), queryOptions: {
+            refetchInterval: 1500,
+            onSuccess: (data) => {
+                data === true ? hookState.networkStatus.set("connected") : hookState.networkStatus.set("disconnected")
+            },
+            onError: (err) => {
+                hookState.networkStatus.set("disconnected")
+                console.log("Failed", {err})
+            }
         }
     })
-    const {data:connected} = usePing(undefined,{refetchOnMount:true,refetchOnReconnect:true,refetchInterval:500,refetchOnWindowFocus:true})
-    const [openModal, setOpenModal] = useState<"close" | "Receive" | "Send">("close")
-
-    useEffect(()=>{
-        if(connected===true){
-            hookState.networkStatus.set("connected")
-        }else{
-            hookState.networkStatus.set("disconnected")
-        }
-    },[connected])
+    const [openModal, setOpenModal] = useState<"close" | "Receive" | "Send" | "Network">("close")
+    const networkStatus = hookState.networkStatus.get()
 
     return <>
-        <Spinner visible={connected && cryptoAddressesIsLoading}/>
-        {openModal === "Receive" && <ReceiveModal onClose={() => setOpenModal("close")} open={openModal === "Receive"} selectedCurrency={selectedCurrency}
-                       publicKey={cryptoAddresses?.data[selectedCurrencyBody.symbol] || ""}/>}
-        {openModal === "Send" && <SendModal onClose={() => setOpenModal("close")} open={openModal === "Send"} selectedCurrency={selectedCurrency}/>}
-        <PanelHeader currency={selectedCurrencyBody} onRefresh={() => {
-            refetch().then(()=>Alert.alert("Done","Data refreshed successfully!"))
+        <Spinner visible={networkStatus === "connected" && cryptoAddressesIsLoading}/>
+        {openModal === "Receive" && <ReceiveModal onClose={() => setOpenModal("close")} open={openModal === "Receive"}
+                                                  selectedCurrency={selectedCurrency}
+                                                  publicKey={cryptoAddresses?.data[selectedCurrencyBody.symbol] || ""}/>}
+        {openModal === "Send" && <SendModal onClose={() => setOpenModal("close")} open={openModal === "Send"}
+                                            selectedCurrency={selectedCurrency}/>}
+        {openModal === "Network" && <NetworkModal onClose={() => setOpenModal("close")} open={openModal === "Network"}/>}
+
+        <PanelHeader onShowNetworkStatus={()=>setOpenModal("Network")} currency={selectedCurrencyBody} onRefresh={() => {
+            refetch().then(() => Alert.alert("Done", "Data refreshed successfully!"))
         }} onReceiveClick={() => setOpenModal("Receive")}
                      onSendClick={() => setOpenModal("Send")}/>
         <ScrollView contentContainerStyle={styles.contentContainer}>

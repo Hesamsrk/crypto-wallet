@@ -1,4 +1,3 @@
-import {backendClient} from "./client";
 import {SupportedSymbols} from "../../config/currencies";
 import {generateQuery} from "../index";
 
@@ -6,7 +5,6 @@ import {generateQuery} from "../index";
 export const useCryptoAddresses = generateQuery<{ masterSeed: string, accountID?: number},{data:{ [key in SupportedSymbols]: string }}>({
     queryKey:"useCryptoAddresses",
     axios:{
-        instance:backendClient,
         method:"POST",
         path:"/wallet/address"
     },
@@ -16,7 +14,6 @@ export const useCryptoAddresses = generateQuery<{ masterSeed: string, accountID?
 export const useCryptoPrivateKeys = generateQuery<{ masterSeed: string, accountID?: number },{data:{ [key in SupportedSymbols]: string }}>({
     queryKey:"useCryptoPrivateKeys",
     axios:{
-        instance:backendClient,
         method:"POST",
         path:"/wallet/privateKeys"
     },
@@ -28,7 +25,9 @@ export const useCryptoPrivateKeys = generateQuery<{ masterSeed: string, accountI
 export const usePing = generateQuery<undefined,boolean>({
     queryKey:"usePing",
     axios:{
-        instance:backendClient,
         method:"GET",
-        path:"/ping"
+        path:"/ping",
+        config:{
+            timeout:2000,
+        }
     }})

@@ -11,7 +11,7 @@ app.use(morgan(':method :url :status :res[content-length] - :response-time ms'))
 app.use(express.urlencoded());
 app.use(express.json());
 app.get('/', (req, res) => res.send("This server is the back-end for crypto-wallet."));
-app.all("/ping",(req,res)=>res.json(true))
+app.all("/ping",(req,res)=>res.send(true))
 app.use((req, res, next) => {
     const auth_token = process.env.AUTH_TOKEN
     if (!auth_token) {

@@ -20,9 +20,10 @@ interface PropTypes {
     onRefresh:()=>void
     onReceiveClick:()=>void
     onSendClick:()=>void
+    onShowNetworkStatus:()=>void
 }
 
-export const PanelHeader: React.FC<PropTypes> = ({currency: SelectedCurrency,onRefresh,onReceiveClick,onSendClick}) => {
+export const PanelHeader: React.FC<PropTypes> = ({currency: SelectedCurrency,onRefresh,onReceiveClick,onSendClick,onShowNetworkStatus}) => {
     const hookState = useHookstate(Store)
     const displayNumbers = hookState.displayNumbers.get()
 
@@ -56,7 +57,9 @@ export const PanelHeader: React.FC<PropTypes> = ({currency: SelectedCurrency,onR
                     </View>
                 </Button>
                 <ButtonBase onClick={()=>onRefresh()} disabled={networkStatus!=="connected"}><FontAwesomeIcon size={20} color={Theme.colors.Gray500} icon={faRefresh} /></ButtonBase>
-                <FontAwesomeIcon style={styles.networkStatus} size={20} color={networkStatus ==="connecting" ? Theme.colors.yellow : networkStatus ==="connected" ? Theme.colors.Accent2 : Theme.colors.Accent1} icon={faWifi}/>
+                <ButtonBase onClick={()=>onShowNetworkStatus()}>
+                    <FontAwesomeIcon style={styles.networkStatus} size={20} color={networkStatus ==="connecting" ? Theme.colors.yellow : networkStatus ==="connected" ? Theme.colors.Accent2 : Theme.colors.Accent1} icon={faWifi}/>
+                </ButtonBase>
             </View>
             <View style={styles.calculator}>
                 <View style={styles.calculatorRow}>
