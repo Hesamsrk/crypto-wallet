@@ -2,7 +2,6 @@ import React from 'react';
 import {StyleSheet, Text, TouchableWithoutFeedback, View, ViewProps} from "react-native";
 import {Currency} from "../../../config/currencies";
 import {Theme} from "../../../styles/theme";
-import {useShake} from "../../../hooks/useShake";
 import {Typography} from "../../../styles/typography";
 import {Tools} from "../../../utils/tools";
 import {useHookstate} from "@hookstate/core";
@@ -13,6 +12,11 @@ interface PropTypes {
     onSelect?: () => any
     selected?: boolean
     disabled?: boolean
+    balance: number
+    market:{
+        price:number,
+        change:number
+    }
 }
 
 export const CurrencyCard: React.FC<PropTypes & ViewProps> = ({
@@ -20,6 +24,8 @@ export const CurrencyCard: React.FC<PropTypes & ViewProps> = ({
                                                                   onSelect,
                                                                   selected,
                                                                   disabled,
+                                                                  balance,
+                                                                  market,
                                                                   ...ViewProps
                                                               }) => {
     const hookState = useHookstate(Store)
@@ -36,15 +42,15 @@ export const CurrencyCard: React.FC<PropTypes & ViewProps> = ({
                 {Currency.name}
             </Text>
             <Text style={styles.price}>
-                {`${Tools.formatNumber(Currency.getPrice(), 2)} $`}
+                {`${Tools.formatNumber(market.price, 2)} $`}
             </Text>
             <Text
-                style={[styles.change, {color: Currency.getChange() > 0 ? Theme.colors.Accent2 : Theme.colors.Accent1}]}>
-                {`${Currency.getChange() > 0 ? "+" : "-"} ${Tools.formatNumber(Math.abs(Currency.getChange()), 2)}%`}
+                style={[styles.change, {color: market.change > 0 ? Theme.colors.Accent2 : Theme.colors.Accent1}]}>
+                {`${market.change > 0 ? "+" : "-"} ${Tools.formatNumber(Math.abs(market.change), 2)}%`}
             </Text>
             <View style={styles.amountContainer}>
                 <Text style={styles.amount}>
-                    {Tools.formatNumber(Currency.getAmount(), Currency.precision, displayNumbers)}
+                    {Tools.formatNumber(balance, Currency.precision, displayNumbers)}
                 </Text>
                 <Text style={styles.symbol}>
                     {Currency.symbol}
@@ -99,11 +105,10 @@ const styles = StyleSheet.create({
     name: Typography.create({
         color: Theme.colors.Black,
         fontSize: 16,
-
     }),
     price: Typography.create({
         color: Theme.colors.Primary500,
-        fontSize: 8,
+        fontSize: 14,
         marginLeft: 2
     }),
     change: Typography.create({
@@ -116,7 +121,7 @@ const styles = StyleSheet.create({
     },
     amount: Typography.create({
         color: Theme.colors.Black,
-        fontSize: 12,
+        fontSize: 10,
     }),
     symbol: Typography.create({
         color: Theme.colors.Black,

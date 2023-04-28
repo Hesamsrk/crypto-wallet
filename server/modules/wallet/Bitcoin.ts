@@ -3,10 +3,7 @@ import {BIP32Interface} from "bip32";
 
 export function BitcoinPublicKeyToAddress(publicKeyBuffer: Buffer): string {
     const publicKeyHash = bitcoin.crypto.hash160(publicKeyBuffer);
-    const network = bitcoin.networks.bitcoin;
-    const address = bitcoin.address.toBase58Check(publicKeyHash, network.pubKeyHash);
-    // Alternative Way: address = bitcoin.payments.p2pkh({ pubkey: publicKeyBuffer, network: bitcoin.networks.bitcoin })?.address || ""
-    return address;
+    return bitcoin.address.toBase58Check(publicKeyHash, bitcoin.networks.bitcoin.pubKeyHash);
 }
 
 export function isValidBitcoinAddress(address: string): boolean {
@@ -19,8 +16,11 @@ export function isValidBitcoinAddress(address: string): boolean {
     }
 }
 
-export const BitcoinWallet = (node:BIP32Interface, testnet:boolean=false)=>{
+export const BitcoinWallet = (node: BIP32Interface, testnet: boolean) => {
     const privateKey = node.toWIF();
-    const { address } = bitcoin.payments.p2pkh({ pubkey: node.publicKey, network:testnet?bitcoin.networks.testnet:bitcoin.networks.bitcoin });
-    return {privateKey,address}
+    const {address} = bitcoin.payments.p2pkh({
+        pubkey: node.publicKey,
+        network: testnet ? bitcoin.networks.testnet : bitcoin.networks.bitcoin,
+    });
+    return {privateKey, address}
 }

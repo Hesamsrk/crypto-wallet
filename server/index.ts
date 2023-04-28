@@ -2,6 +2,7 @@ import express, {Express} from 'express';
 import dotenv from 'dotenv';
 import {walletRouter} from "./router/wallet"
 import morgan from "morgan"
+import {marketRouter} from "./router/market";
 
 dotenv.config();
 const port = process.env.PORT || 9090;
@@ -25,6 +26,8 @@ app.use((req, res, next) => {
 })
 // Authorization is needed from this point:
 app.use("/wallet", walletRouter)
+app.use("/market", marketRouter)
+
 app.listen(port, () => {
     console.log(`⚡️[server]: Server is running at http://localhost:${port}`);
-}).setTimeout(5000);
+}).setTimeout(10000);

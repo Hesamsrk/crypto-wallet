@@ -2,12 +2,12 @@ import React from 'react';
 import {Alert, Dimensions, StatusBar, StyleSheet, Text, View} from "react-native";
 import {Theme} from "../../../styles/theme";
 import CalculatorLine from "../../../svg/material/calculatorLine.svg"
-import {faEye,faEyeSlash, faRefresh, faRightFromBracket,faWifi} from "@fortawesome/free-solid-svg-icons";
+import {faEye, faEyeSlash, faRefresh, faRightFromBracket, faWifi} from "@fortawesome/free-solid-svg-icons";
 import {FontAwesomeIcon} from "@fortawesome/react-native-fontawesome";
 import {Button} from "../../../components/UI/Button";
 import {Typography} from "../../../styles/typography";
 import {ButtonBase} from "../../../components/UI/ButtonBase";
-import {Currencies, Currency} from "../../../config/currencies";
+import {Currencies, Currency, SupportedSymbols} from "../../../config/currencies";
 import {Tools} from "../../../utils/tools";
 import {removeMasterSeed} from "../../../utils/masterSeed";
 import {useHookstate} from "@hookstate/core";
@@ -17,26 +17,35 @@ const screenWidth = Dimensions.get('window').width;
 
 interface PropTypes {
     currency: Currency
-    onRefresh:()=>void
-    onReceiveClick:()=>void
-    onSendClick:()=>void
-    onShowNetworkStatus:()=>void
+    onRefresh: () => void
+    onReceiveClick: () => void
+    onSendClick: () => void
+    onShowNetworkStatus: () => void
+    balances?: { [key in SupportedSymbols]: number }
 }
 
-export const PanelHeader: React.FC<PropTypes> = ({currency: SelectedCurrency,onRefresh,onReceiveClick,onSendClick,onShowNetworkStatus}) => {
+export const PanelHeader: React.FC<PropTypes> = ({
+                                                     currency: selectedCurrency,
+                                                     onRefresh,
+                                                     onReceiveClick,
+                                                     onSendClick,
+                                                     onShowNetworkStatus,
+                                                     balances
+                                                 }) => {
     const hookState = useHookstate(Store)
     const displayNumbers = hookState.displayNumbers.get()
 
     let Total = 0
     for (let curr of Currencies) {
-        Total += curr.getAmount() * curr.getPrice()
+        Total += (balances ? (balances[curr.symbol] || 0) : 0) * curr.getPrice()
     }
     let BTC = Currencies.find(c => c.symbol === "BTC")
 
     const networkStatus = hookState.networkStatus.get()
+    const balance = balances ? (balances[selectedCurrency.symbol] || 0) : 0
     return (<View style={styles.container}>
         <View style={styles.iconBox}>
-            <SelectedCurrency.icon width={"100%"} height={"100%"}/>
+            <selectedCurrency.icon width={"100%"} height={"100%"}/>
         </View>
         <View style={styles.leftBox}>
             <View style={styles.topRow}>
@@ -56,33 +65,38 @@ export const PanelHeader: React.FC<PropTypes> = ({currency: SelectedCurrency,onR
                         <Text style={styles.buttonExitText}>Exit Wallet</Text>
                     </View>
                 </Button>
-                <ButtonBase onClick={()=>onRefresh()} disabled={networkStatus!=="connected"}><FontAwesomeIcon size={20} color={Theme.colors.Gray500} icon={faRefresh} /></ButtonBase>
-                <ButtonBase onClick={()=>onShowNetworkStatus()}>
-                    <FontAwesomeIcon style={styles.networkStatus} size={20} color={networkStatus ==="connecting" ? Theme.colors.yellow : networkStatus ==="connected" ? Theme.colors.Accent2 : Theme.colors.Accent1} icon={faWifi}/>
+                <ButtonBase onClick={() => onRefresh()} disabled={networkStatus !== "connected"}><FontAwesomeIcon
+                    size={20} color={Theme.colors.Gray500} icon={faRefresh}/></ButtonBase>
+                <ButtonBase onClick={() => onShowNetworkStatus()}>
+                    <FontAwesomeIcon style={styles.networkStatus} size={20}
+                                     color={networkStatus === "connecting" ? Theme.colors.yellow : networkStatus === "connected" ? Theme.colors.Accent2 : Theme.colors.Accent1}
+                                     icon={faWifi}/>
                 </ButtonBase>
             </View>
             <View style={styles.calculator}>
                 <View style={styles.calculatorRow}>
                     <Text style={styles.calculatorKey}>Amount</Text>
                     <Text
-                        style={styles.calculatorValue}>{`${Tools.formatNumber(SelectedCurrency.getAmount(), SelectedCurrency.precision, displayNumbers)} ${SelectedCurrency.symbol}`}</Text>
+                        style={styles.calculatorValue}>{`${Tools.formatNumber(balance, selectedCurrency.precision, displayNumbers)} ${selectedCurrency.symbol}`}</Text>
                 </View>
                 <View style={styles.calculatorRow}>
                     <Text style={styles.calculatorKey}>Price</Text>
                     <Text
-                        style={styles.calculatorValue}>{`${Tools.formatNumber(SelectedCurrency.getPrice(), 2)} $`}</Text>
+                        style={styles.calculatorValue}>{`${Tools.formatNumber(selectedCurrency.getPrice(), 2)} $`}</Text>
                 </View>
                 <CalculatorLine width={"100%"} height={12}/>
                 <View style={styles.calculatorRow}>
                     <Text style={styles.calculatorKey}>Total</Text>
                     <Text
-                        style={styles.calculatorValue}>{`${Tools.formatNumber(SelectedCurrency.getPrice() * SelectedCurrency.getAmount(), 2, displayNumbers)} $`}</Text>
+                        style={styles.calculatorValue}>{`${Tools.formatNumber(selectedCurrency.getPrice() * balance, 2, displayNumbers)} $`}</Text>
                 </View>
                 <View style={styles.buttonRow}>
                     <Button style={styles.transferButton} labelStyle={styles.transferButtonLabel}
-                            color={Theme.colors.Accent1} label={"Send"} onClick={()=>onSendClick()} disabled={networkStatus!=="connected"}/>
+                            color={Theme.colors.Accent1} label={"Send"} onClick={() => onSendClick()}
+                            disabled={networkStatus !== "connected"}/>
                     <Button style={styles.transferButton} labelStyle={styles.transferButtonLabel}
-                            color={Theme.colors.Accent2} label={"Receive"} onClick={()=>onReceiveClick()} disabled={networkStatus!=="connected"}/>
+                            color={Theme.colors.Accent2} label={"Receive"} onClick={() => onReceiveClick()}
+                            disabled={networkStatus !== "connected"}/>
                 </View>
             </View>
             <Text style={styles.footerTitle}>Total Assets</Text>
@@ -91,10 +105,10 @@ export const PanelHeader: React.FC<PropTypes> = ({currency: SelectedCurrency,onR
             <View><Text style={styles.totalUSD}>{`${Tools.formatNumber(Total, 2, displayNumbers)} $`}</Text></View>
             {BTC && <View><Text
                 style={styles.totalBTC}>{`${Tools.formatNumber(Total / BTC.getPrice(), BTC.precision, displayNumbers)} ${BTC.symbol}`}</Text></View>}
-            <ButtonBase style={styles.eyeButton} onClick={()=>{
-                hookState.displayNumbers.set(old=>!old)
+            <ButtonBase style={styles.eyeButton} onClick={() => {
+                hookState.displayNumbers.set(old => !old)
             }}>
-                <FontAwesomeIcon size={25} color={Theme.colors.Gray500} icon={displayNumbers?faEye:faEyeSlash}/>
+                <FontAwesomeIcon size={25} color={Theme.colors.Gray500} icon={displayNumbers ? faEye : faEyeSlash}/>
             </ButtonBase>
         </View>
     </View>)
@@ -244,7 +258,7 @@ const styles = StyleSheet.create({
         fontSize: 14,
         color: Theme.colors.Gray500
     }),
-    networkStatus:{
-        marginLeft:20
+    networkStatus: {
+        marginLeft: 20
     }
 })

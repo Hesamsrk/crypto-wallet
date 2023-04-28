@@ -1,6 +1,6 @@
 import React, {PropsWithChildren, useState} from 'react';
 import {UIModal} from "../../../components/UI/UIModal";
-import {Currencies} from "../../../config/currencies";
+import {Currencies, SupportedSymbols} from "../../../config/currencies";
 import {Input, styles} from "../../../components/UI/Input";
 import {Button, Text} from "@react-native-material/core";
 import {Theme} from "../../../styles/theme";
@@ -19,7 +19,8 @@ interface PropTypes {
     onClose: () => void
     open: boolean
     selectedCurrency: string
-};
+    balances?: { [key in SupportedSymbols]: number }
+}
 
 export const SendModal: React.FC<PropsWithChildren<PropTypes>> = (props) => {
     const selectedCurrencyBody = Currencies.find(item => item.symbol === props.selectedCurrency)
@@ -27,6 +28,7 @@ export const SendModal: React.FC<PropsWithChildren<PropTypes>> = (props) => {
     const [amount, setAmount] = useState<string>("")
 
     const [scannerToggle, setScannerToggle] = useState<boolean>(false)
+    const balance = props.balances  ? (props.balances[selectedCurrencyBody.symbol] || 0) : 0
     return <UIModal title={`Send ${selectedCurrencyBody.symbol}`} onClose={props.onClose} open={props.open}>
         {
             scannerToggle ? <BarcodeScanner style={{width}} onScanned={({data}) => {
@@ -51,10 +53,10 @@ export const SendModal: React.FC<PropsWithChildren<PropTypes>> = (props) => {
                trailingContainerStyle={{width: 90, alignItems: "flex-end"}}
                keyboardType='numeric'
                label={`Amount ${selectedCurrencyBody.symbol}`} endButton={{
-            label: "MAX", onClick: () => setAmount("" + selectedCurrencyBody.getAmount())
+            label: "MAX", onClick: () => setAmount("" + balance)
         }}/>
         <Text
-            style={styles.endButton}>{`Balance: ${Tools.formatNumber(selectedCurrencyBody.getAmount(), selectedCurrencyBody.precision, true)} ${selectedCurrencyBody.symbol}`}</Text>
+            style={styles.endButton}>{`Balance: ${Tools.formatNumber(balance, selectedCurrencyBody.precision, true)} ${selectedCurrencyBody.symbol}`}</Text>
         <Button title={"Submit"} color={Theme.colors.Accent2} tintColor={Theme.colors.Gray600} style={{marginTop: 10}}/>
     </UIModal>
 };

@@ -5,7 +5,7 @@ import {Currencies} from "../../config/currencies";
 import {CurrencyCard} from "./components/CurrencyCard";
 import {useState} from "react";
 import {Typography} from "../../styles/typography";
-import {useCryptoAddresses, usePing} from "../../services/backend/api";
+import {useBalanceList, useCryptoAddresses, useMarketPrices, usePing} from "../../services/backend/api";
 import {useHookstate} from "@hookstate/core";
 import {Store} from "../../store";
 import Spinner from 'react-native-loading-spinner-overlay';
@@ -13,18 +13,18 @@ import {ReceiveModal} from "./components/ReceiveModal";
 import {SendModal} from "./components/SendModal";
 import {backendClient} from "../../services/backend/client";
 import {NetworkModal} from "./components/NetworkModal";
+import {logger} from "../../utils/logger";
 
 export const MainPanel = Page(() => {
     const hookState = useHookstate(Store)
     const backend = hookState.backend.get()
-    console.log({backend})
     const privateKey = hookState.privateKey.get()
     const [selectedCurrency, setSelectedCurrency] = useState<string>(Currencies[0].symbol)
     const selectedCurrencyBody = Currencies.find(item => item.symbol === selectedCurrency)
     const {
         data: cryptoAddresses,
-        isLoading: cryptoAddressesIsLoading,
-        refetch,
+        refetch: refetchAddresses,
+        isRefetching: cryptoAddressesIsLoading
     } = useCryptoAddresses({
         instance: backendClient(backend), variables: {masterSeed: privateKey, accountID: 0}
     })
@@ -37,24 +37,41 @@ export const MainPanel = Page(() => {
             },
             onError: (err) => {
                 hookState.networkStatus.set("disconnected")
-                console.log("Failed", {err})
+                logger.log("Failed", {err})
             }
         }
     })
+
+    const {data: balances, refetch: refetchBalances,isRefetching:balancesIsLoading} = useBalanceList({
+        instance: backendClient(backend), variables: {masterSeed: privateKey, accountID: 0}
+    })
+    const {data: marketPrices, refetch: refetchMarketPrices,isRefetching:marketPricesIsLoading} = useMarketPrices({
+        instance: backendClient(backend)
+    })
+
     const [openModal, setOpenModal] = useState<"close" | "Receive" | "Send" | "Network">("close")
     const networkStatus = hookState.networkStatus.get()
 
+    const refetchRequests = async () => {
+        await refetchAddresses()
+        await refetchBalances()
+        await refetchMarketPrices()
+    }
+    const loading = marketPricesIsLoading || balancesIsLoading || cryptoAddressesIsLoading
+
     return <>
-        <Spinner visible={networkStatus === "connected" && cryptoAddressesIsLoading}/>
+        <Spinner visible={networkStatus === "connecting" || loading}/>
         {openModal === "Receive" && <ReceiveModal onClose={() => setOpenModal("close")} open={openModal === "Receive"}
                                                   selectedCurrency={selectedCurrency}
-                                                  publicKey={cryptoAddresses?.data[selectedCurrencyBody.symbol] || ""}/>}
+                                                  publicKey={cryptoAddresses?.data ? (cryptoAddresses.data[selectedCurrencyBody.symbol] || "") : ""}/>}
         {openModal === "Send" && <SendModal onClose={() => setOpenModal("close")} open={openModal === "Send"}
-                                            selectedCurrency={selectedCurrency}/>}
-        {openModal === "Network" && <NetworkModal onClose={() => setOpenModal("close")} open={openModal === "Network"}/>}
+                                            selectedCurrency={selectedCurrency} balances={balances?.data}/>}
+        {openModal === "Network" &&
+        <NetworkModal onClose={() => setOpenModal("close")} open={openModal === "Network"}/>}
 
-        <PanelHeader onShowNetworkStatus={()=>setOpenModal("Network")} currency={selectedCurrencyBody} onRefresh={() => {
-            refetch().then(() => Alert.alert("Done", "Data refreshed successfully!"))
+        <PanelHeader onShowNetworkStatus={() => setOpenModal("Network")} currency={selectedCurrencyBody}
+                     balances={balances?.data} onRefresh={() => {
+            refetchRequests().then(() => Alert.alert("Done", "Data refreshed successfully!"))
         }} onReceiveClick={() => setOpenModal("Receive")}
                      onSendClick={() => setOpenModal("Send")}/>
         <ScrollView contentContainerStyle={styles.contentContainer}>
@@ -65,8 +82,13 @@ export const MainPanel = Page(() => {
                                                              setSelectedCurrency(currency.symbol)
                                                          }}
                                                          style={styles.card} currency={currency}
+                                                         balance={balances ? balances[currency.symbol] || 0 : 0}
                                                          disabled={currency.disabled}
-                                                         key={currency.symbol}/>)
+                                                         key={currency.symbol}
+                                                         market={marketPrices?.data ? marketPrices.data.find(i => i.symbol === currency.symbol) : {
+                                                             price: 0,
+                                                             change: 0
+                                                         }}/>)
             }
             <View style={{width: "100%"}}><Text style={styles.title}>Platforms</Text></View>
         </ScrollView>

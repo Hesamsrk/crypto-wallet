@@ -1,14 +1,14 @@
 import {FC} from "react";
 import {SvgProps} from "react-native-svg";
 import BTCIcon from "../svg/symbols/BTC.svg"
-import BTCTIcon from "../svg/symbols/BTCT.svg"
+import TBTCIcon from "../svg/symbols/TBTC.svg"
 import BNBIcon from "../svg/symbols/BNB.svg"
 import DOGEIcon from "../svg/symbols/DOGE.svg"
 import ETHIcon from "../svg/symbols/ETH.svg"
 import TRXIcon from "../svg/symbols/TRX.svg"
 import USDTIcon from "../svg/symbols/USDT.svg"
 
-export type SupportedSymbols = "USDT" | "BTC" | "BTCT" | "ETH" | "BNB" | "TRX" | "DOGE"
+export type SupportedSymbols = "USDT" | "BTC" | "TBTC" | "ETH" | "BNB" | "TRX" | "DOGE"
 
 export interface Currency {
     name: string
@@ -16,7 +16,6 @@ export interface Currency {
     icon: FC<SvgProps>
     precision: number
     getPrice: () => number
-    getAmount: () => number
     getChange: () => number
     disabled?: boolean
 }
@@ -28,24 +27,21 @@ export const Currencies: Currency[] = [
         precision: 6,
         icon: BTCIcon,
         getPrice: () => (52000.3112361236),
-        getAmount: () => (12.1261236),
         getChange: () => (-5.612361236),
     },
     {
         name: "Testnet",
-        symbol: "BTCT",
+        symbol: "TBTC",
         precision: 6,
-        icon: BTCTIcon,
-        getPrice: () => (52000.3112361236),
-        getAmount: () => (12.1261236),
-        getChange: () => (-5.612361236),
+        icon: TBTCIcon,
+        getPrice: () => (9999),
+        getChange: () => (0),
     }, {
         name: "Ethereum",
         symbol: "ETH",
         precision: 5,
         icon: ETHIcon,
         getPrice: () => (1200.612361263),
-        getAmount: () => (5.126236),
         getChange: () => (+0.51236126),
     },
     {
@@ -54,7 +50,6 @@ export const Currencies: Currency[] = [
         precision: 2,
         icon: USDTIcon,
         getPrice: () => (1200.51261236),
-        getAmount: () => (12.1236123612),
         getChange: () => (+5.61235235),
         disabled: true
     },
@@ -64,7 +59,6 @@ export const Currencies: Currency[] = [
         precision: 2,
         icon: BNBIcon,
         getPrice: () => (340),
-        getAmount: () => (15125),
         getChange: () => (-2.43),
         disabled: true
     },
@@ -74,7 +68,6 @@ export const Currencies: Currency[] = [
         precision: 2,
         icon: TRXIcon,
         getPrice: () => (0.03),
-        getAmount: () => (12),
         getChange: () => (+1.01),
         disabled: true
     },
@@ -84,7 +77,6 @@ export const Currencies: Currency[] = [
         precision: 2,
         icon: DOGEIcon,
         getPrice: () => (0.00041),
-        getAmount: () => (4124),
         getChange: () => (-0.05),
         disabled: true
     },

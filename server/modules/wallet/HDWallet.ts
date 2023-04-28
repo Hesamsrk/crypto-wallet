@@ -28,7 +28,7 @@ export interface KeyPair {
 }
 
 export type Wallet = {
-    [key in "BTC" | "ETH" | "BTCT"]: KeyPair;
+    [key in "BTC" | "ETH" | "TBTC"]: KeyPair;
 };
 
 
@@ -47,7 +47,7 @@ export const getWallet = async (masterSeed: string, accountID: number = 0): Prom
             address: etherWallet ? etherWallet.address : "",
             privateKey: etherWallet ? etherWallet.privateKey : ""
         },
-        BTCT: {
+        TBTC: {
             address: bitcoinTestNetWallet.address || "",
             privateKey: bitcoinTestNetWallet.privateKey
         }
