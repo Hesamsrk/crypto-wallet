@@ -1,7 +1,7 @@
 import {Page} from "../../components/layout/Page";
 import {PanelHeader} from "./components/PanelHeader";
 import {Alert, ScrollView, StyleSheet, Text, View} from "react-native";
-import {Currencies} from "../../config/currencies";
+import {Currencies, SupportedSymbols} from "../../config/currencies";
 import {CurrencyCard} from "./components/CurrencyCard";
 import {useState} from "react";
 import {Typography} from "../../styles/typography";
@@ -58,7 +58,7 @@ export const MainPanel = Page(() => {
         await refetchMarketPrices()
     }
     const loading = marketPricesIsLoading || balancesIsLoading || cryptoAddressesIsLoading
-
+    console.log({balances})
     return <>
         <Spinner visible={networkStatus === "connecting" || loading}/>
         {openModal === "Receive" && <ReceiveModal onClose={() => setOpenModal("close")} open={openModal === "Receive"}
@@ -73,7 +73,7 @@ export const MainPanel = Page(() => {
                      balances={balances?.data} onRefresh={() => {
             refetchRequests().then(() => Alert.alert("Done", "Data refreshed successfully!"))
         }} onReceiveClick={() => setOpenModal("Receive")}
-                     onSendClick={() => setOpenModal("Send")}/>
+                     onSendClick={() => setOpenModal("Send")} market={marketPrices?.data}/>
         <ScrollView contentContainerStyle={styles.contentContainer}>
             <View style={{width: "100%"}}><Text style={styles.title}>Cryptocurrencies</Text></View>
             {
@@ -82,13 +82,10 @@ export const MainPanel = Page(() => {
                                                              setSelectedCurrency(currency.symbol)
                                                          }}
                                                          style={styles.card} currency={currency}
-                                                         balance={balances ? balances[currency.symbol] || 0 : 0}
+                                                         balance={balances?.data ? (balances.data[currency.symbol] || 0) : 0}
                                                          disabled={currency.disabled}
                                                          key={currency.symbol}
-                                                         market={marketPrices?.data ? marketPrices.data.find(i => i.symbol === currency.symbol) : {
-                                                             price: 0,
-                                                             change: 0
-                                                         }}/>)
+                                                         market={(marketPrices?.data && marketPrices.data[currency.symbol]) || {price:0,change:0}}/>)
             }
             <View style={{width: "100%"}}><Text style={styles.title}>Platforms</Text></View>
         </ScrollView>

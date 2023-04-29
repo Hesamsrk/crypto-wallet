@@ -15,8 +15,6 @@ export interface Currency {
     symbol: SupportedSymbols
     icon: FC<SvgProps>
     precision: number
-    getPrice: () => number
-    getChange: () => number
     disabled?: boolean
 }
 
@@ -26,31 +24,23 @@ export const Currencies: Currency[] = [
         symbol: "BTC",
         precision: 6,
         icon: BTCIcon,
-        getPrice: () => (52000.3112361236),
-        getChange: () => (-5.612361236),
     },
     {
         name: "Testnet",
         symbol: "TBTC",
         precision: 6,
         icon: TBTCIcon,
-        getPrice: () => (9999),
-        getChange: () => (0),
     }, {
         name: "Ethereum",
         symbol: "ETH",
         precision: 5,
         icon: ETHIcon,
-        getPrice: () => (1200.612361263),
-        getChange: () => (+0.51236126),
     },
     {
-        name: "TetherUS(TRC20)",
+        name: "TetherUS",
         symbol: "USDT",
         precision: 2,
         icon: USDTIcon,
-        getPrice: () => (1200.51261236),
-        getChange: () => (+5.61235235),
         disabled: true
     },
     {
@@ -58,8 +48,6 @@ export const Currencies: Currency[] = [
         symbol: "BNB",
         precision: 2,
         icon: BNBIcon,
-        getPrice: () => (340),
-        getChange: () => (-2.43),
         disabled: true
     },
     {
@@ -67,8 +55,6 @@ export const Currencies: Currency[] = [
         symbol: "TRX",
         precision: 2,
         icon: TRXIcon,
-        getPrice: () => (0.03),
-        getChange: () => (+1.01),
         disabled: true
     },
     {
@@ -76,8 +62,6 @@ export const Currencies: Currency[] = [
         symbol: "DOGE",
         precision: 2,
         icon: DOGEIcon,
-        getPrice: () => (0.00041),
-        getChange: () => (-0.05),
         disabled: true
     },
 ]

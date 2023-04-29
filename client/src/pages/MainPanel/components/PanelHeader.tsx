@@ -12,6 +12,7 @@ import {Tools} from "../../../utils/tools";
 import {removeMasterSeed} from "../../../utils/masterSeed";
 import {useHookstate} from "@hookstate/core";
 import {Store} from "../../../store";
+import {marketPrices} from "../../../services/backend/api";
 
 const screenWidth = Dimensions.get('window').width;
 
@@ -22,6 +23,7 @@ interface PropTypes {
     onSendClick: () => void
     onShowNetworkStatus: () => void
     balances?: { [key in SupportedSymbols]: number }
+    market: marketPrices | undefined
 }
 
 export const PanelHeader: React.FC<PropTypes> = ({
@@ -30,14 +32,16 @@ export const PanelHeader: React.FC<PropTypes> = ({
                                                      onReceiveClick,
                                                      onSendClick,
                                                      onShowNetworkStatus,
-                                                     balances
+                                                     balances,
+                                                     market
                                                  }) => {
     const hookState = useHookstate(Store)
+    const marketInfo = Object.fromEntries(Currencies.map(i=>([i.symbol,market && market[i.symbol] || {price:0,change:0}]))) as marketPrices
+    const currentMarket = marketInfo[selectedCurrency.symbol]
     const displayNumbers = hookState.displayNumbers.get()
-
     let Total = 0
     for (let curr of Currencies) {
-        Total += (balances ? (balances[curr.symbol] || 0) : 0) * curr.getPrice()
+        Total += (balances ? (balances[curr.symbol] || 0) : 0) * marketInfo[curr.symbol].price
     }
     let BTC = Currencies.find(c => c.symbol === "BTC")
 
@@ -82,13 +86,13 @@ export const PanelHeader: React.FC<PropTypes> = ({
                 <View style={styles.calculatorRow}>
                     <Text style={styles.calculatorKey}>Price</Text>
                     <Text
-                        style={styles.calculatorValue}>{`${Tools.formatNumber(selectedCurrency.getPrice(), 2)} $`}</Text>
+                        style={styles.calculatorValue}>{`${Tools.formatNumber(currentMarket.price, 2)} $`}</Text>
                 </View>
                 <CalculatorLine width={"100%"} height={12}/>
                 <View style={styles.calculatorRow}>
                     <Text style={styles.calculatorKey}>Total</Text>
                     <Text
-                        style={styles.calculatorValue}>{`${Tools.formatNumber(selectedCurrency.getPrice() * balance, 2, displayNumbers)} $`}</Text>
+                        style={styles.calculatorValue}>{`${Tools.formatNumber(currentMarket.price * balance, 2, displayNumbers)} $`}</Text>
                 </View>
                 <View style={styles.buttonRow}>
                     <Button style={styles.transferButton} labelStyle={styles.transferButtonLabel}
@@ -104,7 +108,7 @@ export const PanelHeader: React.FC<PropTypes> = ({
         <View style={styles.footer}>
             <View><Text style={styles.totalUSD}>{`${Tools.formatNumber(Total, 2, displayNumbers)} $`}</Text></View>
             {BTC && <View><Text
-                style={styles.totalBTC}>{`${Tools.formatNumber(Total / BTC.getPrice(), BTC.precision, displayNumbers)} ${BTC.symbol}`}</Text></View>}
+                style={styles.totalBTC}>{`${Tools.formatNumber(Total / marketInfo.BTC.price, BTC.precision, displayNumbers)} ${BTC.symbol}`}</Text></View>}
             <ButtonBase style={styles.eyeButton} onClick={() => {
                 hookState.displayNumbers.set(old => !old)
             }}>
@@ -157,7 +161,7 @@ const styles = StyleSheet.create({
         borderTopRightRadius: 20,
         padding: 15,
         flexDirection: "row",
-        justifyContent: "space-around",
+        justifyContent: "flex-start",
         alignItems: "flex-end",
 
         shadowColor: Theme.colors.Primary600,

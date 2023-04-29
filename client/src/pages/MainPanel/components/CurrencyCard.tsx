@@ -30,6 +30,7 @@ export const CurrencyCard: React.FC<PropTypes & ViewProps> = ({
                                                               }) => {
     const hookState = useHookstate(Store)
     const displayNumbers = hookState.displayNumbers.get()
+
     return (<TouchableWithoutFeedback onPress={() => {
         if (disabled) {
             return
@@ -94,7 +95,7 @@ const styles = StyleSheet.create({
         borderWidth: 4,
     },
     disabled: {
-        opacity: 0.2
+        opacity: 0.4
     },
     contentBox: {
         width: 100,

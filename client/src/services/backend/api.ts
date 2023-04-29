@@ -42,12 +42,15 @@ export const useBalanceList = generateQuery<{ masterSeed, accountID }, { data: {
     queryOptions: {keepPreviousData: true}
 })
 
-export const useMarketPrices = generateQuery<undefined, {
-    data: {
-        symbol: SupportedSymbols,
+export type marketPrices = {
+    [key in SupportedSymbols]: {
         price: number,
         change: number
-    }[]
+    }
+}
+
+export const useMarketPrices = generateQuery<undefined, {
+    data: marketPrices
 }>({
     queryKey: "useMarketPrices",
     axios: {
