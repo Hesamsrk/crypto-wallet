@@ -22,13 +22,13 @@ export const Currencies: Currency[] = [
     {
         name: "Bitcoin",
         symbol: "BTC",
-        precision: 6,
+        precision: 8,
         icon: BTCIcon,
     },
     {
         name: "Testnet",
         symbol: "TBTC",
-        precision: 6,
+        precision: 8,
         icon: TBTCIcon,
     }, {
         name: "Ethereum",

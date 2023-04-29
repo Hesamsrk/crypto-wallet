@@ -9,7 +9,8 @@ interface IStore {
     backend?:{
         baseURL:string,
         authToken:string
-    }
+    },
+    accountID:number
 }
 
 
@@ -19,7 +20,8 @@ export const Store = hookstate<IStore>({
     authenticated:false,
     displayNumbers:true,
     networkStatus: "connecting",
-    backend:undefined
+    backend:undefined,
+    accountID:0
 });
 
 

@@ -8,7 +8,7 @@ dotenv.config();
 const port = process.env.PORT || 9090;
 
 const app: Express = express();
-app.use(morgan(':method :url :status :res[content-length] - :response-time ms'))
+// app.use(morgan(':method :url :status :res[content-length] - :response-time ms'))
 app.use(express.urlencoded());
 app.use(express.json());
 app.get('/', (req, res) => res.send("This server is the back-end for crypto-wallet."));

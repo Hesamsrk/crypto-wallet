@@ -1,6 +1,6 @@
 import express, {Request} from "express";
 import {getWallet, isValidEntropyForBip39} from "../modules/wallet/HDWallet";
-import {getTestnetBalance, sendTestnetTransaction} from "../services/blockcypher";
+import {getTestnetBalance, transferBitcoinTestnet} from "../services/blockcypher";
 import {isValidTestnetAddress} from "../modules/wallet/Testnet";
 
 export const walletRouter = express.Router()
@@ -110,11 +110,7 @@ walletRouter.post("/transfer", async (req, res) => {
             if (!isValidTestnetAddress(toAddress)) {
                 return res.status(400).json({error: `toAddress is not a valid ${symbol} address!`})
             }
-            const balance = Number(await getTestnetBalance(fromAddress))
-            if (amount > balance) {
-                return res.status(400).json({error: `Not enough ${symbol} balance!`})
-            }
-            return res.json({data: await sendTestnetTransaction(fromAddress, toAddress, amount, privateKey)})
+            return res.json({data: await transferBitcoinTestnet({privateKey, fromAddress, toAddress, amount: +amount})})
     }
 
 })

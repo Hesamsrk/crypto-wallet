@@ -8,16 +8,16 @@ export const useCryptoAddresses = generateQuery<{ masterSeed: string, accountID?
         method: "POST",
         path: "/wallet/address"
     },
-    queryOptions: {keepPreviousData: true}
+    queryOptions: {keepPreviousData: true,refetchOnWindowFocus:false,refetchOnReconnect:false,refetchOnMount:false,refetchIntervalInBackground:false,refetchInterval:false}
 })
 
 export const useCryptoPrivateKeys = generateQuery<{ masterSeed: string, accountID?: number }, { data: { [key in SupportedSymbols]: string } }>({
     queryKey: "useCryptoPrivateKeys",
     axios: {
         method: "POST",
-        path: "/wallet/privateKeys"
+        path: "/wallet/privateKey"
     },
-    queryOptions: {keepPreviousData: true}
+    queryOptions: {keepPreviousData: true,refetchOnWindowFocus:false,refetchOnReconnect:false,refetchOnMount:false,refetchIntervalInBackground:false,refetchInterval:false}
 })
 
 
@@ -39,7 +39,7 @@ export const useBalanceList = generateQuery<{ masterSeed, accountID }, { data: {
         method: "POST",
         path: "/wallet/balance/list",
     },
-    queryOptions: {keepPreviousData: true}
+    queryOptions: {keepPreviousData: true,refetchOnWindowFocus:false,refetchOnReconnect:false,refetchOnMount:false,refetchIntervalInBackground:false,refetchInterval:false}
 })
 
 export type marketPrices = {
@@ -57,5 +57,5 @@ export const useMarketPrices = generateQuery<undefined, {
         method: "GET",
         path: `/market/prices?symbols=${Currencies.map(i => i.symbol).join(",")}`,
     },
-    queryOptions: {keepPreviousData: true}
+    queryOptions: {keepPreviousData: true,refetchOnWindowFocus:false,refetchOnReconnect:false,refetchOnMount:false,refetchIntervalInBackground:false,refetchInterval:false}
 })

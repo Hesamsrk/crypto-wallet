@@ -7,7 +7,7 @@ export const ENV: {
 
 
 export const Configs = {
-    DEV_MODE: false,
+    DEV_MODE: true,
     MINIMUM_PATTERN_LENGTH: 8,
     SERVICES: {
         backend: {

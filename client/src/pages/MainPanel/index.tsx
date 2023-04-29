@@ -5,7 +5,13 @@ import {Currencies, SupportedSymbols} from "../../config/currencies";
 import {CurrencyCard} from "./components/CurrencyCard";
 import {useState} from "react";
 import {Typography} from "../../styles/typography";
-import {useBalanceList, useCryptoAddresses, useMarketPrices, usePing} from "../../services/backend/api";
+import {
+    useBalanceList,
+    useCryptoAddresses,
+    useCryptoPrivateKeys,
+    useMarketPrices,
+    usePing
+} from "../../services/backend/api";
 import {useHookstate} from "@hookstate/core";
 import {Store} from "../../store";
 import Spinner from 'react-native-loading-spinner-overlay';
@@ -14,20 +20,31 @@ import {SendModal} from "./components/SendModal";
 import {backendClient} from "../../services/backend/client";
 import {NetworkModal} from "./components/NetworkModal";
 import {logger} from "../../utils/logger";
+import {Counter} from "../../components/UI/Counter";
 
 export const MainPanel = Page(() => {
     const hookState = useHookstate(Store)
     const backend = hookState.backend.get()
     const privateKey = hookState.privateKey.get()
+    const accountID = hookState.accountID.get()
     const [selectedCurrency, setSelectedCurrency] = useState<string>(Currencies[0].symbol)
     const selectedCurrencyBody = Currencies.find(item => item.symbol === selectedCurrency)
     const {
         data: cryptoAddresses,
         refetch: refetchAddresses,
-        isRefetching: cryptoAddressesIsLoading
+        isRefetching: cryptoAddressesIsRefetching
     } = useCryptoAddresses({
-        instance: backendClient(backend), variables: {masterSeed: privateKey, accountID: 0}
+        instance: backendClient(backend), variables: {masterSeed: privateKey, accountID}
     })
+
+    const {
+        data: cryptoPrivateKeys,
+        refetch: refetchPrivateKeys,
+        isRefetching: privateKeysIsRefetching
+    } = useCryptoPrivateKeys({
+        instance: backendClient(backend), variables: {masterSeed: privateKey, accountID}
+    })
+
 
     usePing({
         instance: backendClient(backend), queryOptions: {
@@ -42,10 +59,10 @@ export const MainPanel = Page(() => {
         }
     })
 
-    const {data: balances, refetch: refetchBalances,isRefetching:balancesIsLoading} = useBalanceList({
-        instance: backendClient(backend), variables: {masterSeed: privateKey, accountID: 0}
+    const {data: balances, refetch: refetchBalances,isRefetching:balancesIsRefetching} = useBalanceList({
+        instance: backendClient(backend), variables: {masterSeed: privateKey, accountID}
     })
-    const {data: marketPrices, refetch: refetchMarketPrices,isRefetching:marketPricesIsLoading} = useMarketPrices({
+    const {data: marketPrices, refetch: refetchMarketPrices,isRefetching:marketPricesIsRefetching} = useMarketPrices({
         instance: backendClient(backend)
     })
 
@@ -56,9 +73,10 @@ export const MainPanel = Page(() => {
         await refetchAddresses()
         await refetchBalances()
         await refetchMarketPrices()
+        await refetchPrivateKeys()
     }
-    const loading = marketPricesIsLoading || balancesIsLoading || cryptoAddressesIsLoading
-    console.log({balances})
+    const loading = marketPricesIsRefetching || balancesIsRefetching || cryptoAddressesIsRefetching || privateKeysIsRefetching
+
     return <>
         <Spinner visible={networkStatus === "connecting" || loading}/>
         {openModal === "Receive" && <ReceiveModal onClose={() => setOpenModal("close")} open={openModal === "Receive"}
@@ -75,6 +93,12 @@ export const MainPanel = Page(() => {
         }} onReceiveClick={() => setOpenModal("Receive")}
                      onSendClick={() => setOpenModal("Send")} market={marketPrices?.data}/>
         <ScrollView contentContainerStyle={styles.contentContainer}>
+            <Counter label={"Wallet ID"} minimum={0} maximum={9} onChange={(val)=>{
+                hookState.accountID.set(val)
+                setTimeout(()=>{
+                    refetchRequests().then(r => Alert.alert("Done","New wallet loaded!"))
+                },500)
+            }}/>
             <View style={{width: "100%"}}><Text style={styles.title}>Cryptocurrencies</Text></View>
             {
                 Currencies.map(currency => <CurrencyCard selected={currency.symbol === selectedCurrency}
