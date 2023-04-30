@@ -1,7 +1,7 @@
 import {Page} from "../../components/layout/Page";
 import {PanelHeader} from "./components/PanelHeader";
 import {Alert, ScrollView, StyleSheet, Text, View} from "react-native";
-import {Currencies, SupportedSymbols} from "../../config/currencies";
+import {Currencies} from "../../config/currencies";
 import {CurrencyCard} from "./components/CurrencyCard";
 import {useState} from "react";
 import {Typography} from "../../styles/typography";
@@ -59,10 +59,10 @@ export const MainPanel = Page(() => {
         }
     })
 
-    const {data: balances, refetch: refetchBalances,isRefetching:balancesIsRefetching} = useBalanceList({
+    const {data: balances, refetch: refetchBalances, isRefetching: balancesIsRefetching} = useBalanceList({
         instance: backendClient(backend), variables: {masterSeed: privateKey, accountID}
     })
-    const {data: marketPrices, refetch: refetchMarketPrices,isRefetching:marketPricesIsRefetching} = useMarketPrices({
+    const {data: marketPrices, refetch: refetchMarketPrices, isRefetching: marketPricesIsRefetching} = useMarketPrices({
         instance: backendClient(backend)
     })
 
@@ -83,6 +83,10 @@ export const MainPanel = Page(() => {
                                                   selectedCurrency={selectedCurrency}
                                                   publicKey={cryptoAddresses?.data ? (cryptoAddresses.data[selectedCurrencyBody.symbol] || "") : ""}/>}
         {openModal === "Send" && <SendModal onClose={() => setOpenModal("close")} open={openModal === "Send"}
+                                            wallet={{
+                                                fromAddress: cryptoAddresses?.data ? (cryptoAddresses.data[selectedCurrencyBody.symbol] || "") : "",
+                                                fromPrivateKey:cryptoPrivateKeys?.data ? (cryptoPrivateKeys.data[selectedCurrencyBody.symbol] || "") : ""
+                                            }}
                                             selectedCurrency={selectedCurrency} balances={balances?.data}/>}
         {openModal === "Network" &&
         <NetworkModal onClose={() => setOpenModal("close")} open={openModal === "Network"}/>}
@@ -93,11 +97,11 @@ export const MainPanel = Page(() => {
         }} onReceiveClick={() => setOpenModal("Receive")}
                      onSendClick={() => setOpenModal("Send")} market={marketPrices?.data}/>
         <ScrollView contentContainerStyle={styles.contentContainer}>
-            <Counter label={"Wallet ID"} minimum={0} maximum={9} onChange={(val)=>{
+            <Counter label={"Wallet ID"} minimum={0} maximum={9} onChange={(val) => {
                 hookState.accountID.set(val)
-                setTimeout(()=>{
-                    refetchRequests().then(r => Alert.alert("Done","New wallet loaded!"))
-                },500)
+                setTimeout(() => {
+                    refetchRequests().then(r => Alert.alert("Done", "New wallet loaded!"))
+                }, 500)
             }}/>
             <View style={{width: "100%"}}><Text style={styles.title}>Cryptocurrencies</Text></View>
             {
@@ -109,7 +113,10 @@ export const MainPanel = Page(() => {
                                                          balance={balances?.data ? (balances.data[currency.symbol] || 0) : 0}
                                                          disabled={currency.disabled}
                                                          key={currency.symbol}
-                                                         market={(marketPrices?.data && marketPrices.data[currency.symbol]) || {price:0,change:0}}/>)
+                                                         market={(marketPrices?.data && marketPrices.data[currency.symbol]) || {
+                                                             price: 0,
+                                                             change: 0
+                                                         }}/>)
             }
             <View style={{width: "100%"}}><Text style={styles.title}>Platforms</Text></View>
         </ScrollView>

@@ -16,6 +16,7 @@ export interface Currency {
     icon: FC<SvgProps>
     precision: number
     disabled?: boolean
+    minimumFee?:number
 }
 
 export const Currencies: Currency[] = [
@@ -30,6 +31,7 @@ export const Currencies: Currency[] = [
         symbol: "TBTC",
         precision: 8,
         icon: TBTCIcon,
+        minimumFee:600
     }, {
         name: "Ethereum",
         symbol: "ETH",

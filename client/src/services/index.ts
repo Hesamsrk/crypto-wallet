@@ -1,4 +1,4 @@
-import {QueryKey, useQuery, UseQueryOptions} from "react-query";
+import {MutationKey, QueryKey, useMutation, UseMutationOptions, useQuery, UseQueryOptions} from "react-query";
 import { AxiosInstance, AxiosRequestConfig} from "axios";
 import {logger} from "../utils/logger";
 
@@ -21,5 +21,28 @@ export function generateQuery<IT = undefined, OT = undefined>(args: { queryKey: 
         }, {
             ...args.queryOptions,
             ...options.queryOptions
+        })
+}
+
+
+export function generateMutation<IT = undefined, OT = undefined>(args: { mutationKey: string, axios: { config?: AxiosRequestConfig<IT>, path: string, method: "GET" | "POST" }, mutationOptions?: Omit<UseMutationOptions<OT, undefined, IT, MutationKey>, "mutationKey" | "mutationFn"> }) {
+    return (options:{instance: AxiosInstance, mutationOptions?: typeof args.mutationOptions}) => useMutation<OT, undefined, IT>
+    (
+        args.mutationKey,
+        async (variables) => {
+            let data: OT = undefined
+            try {
+                data = (await options.instance(args.axios.path, {
+                    data: variables,
+                    method: args.axios.method,
+                    ...(args.axios.config || {}),
+                })).data
+            } catch (e) {
+                logger.error(`Network error: ${args.axios.method} ${args.axios.path}`)
+            }
+            return data
+        }, {
+            ...args.mutationOptions,
+            ...options.mutationOptions
         })
 }

@@ -41,7 +41,7 @@ export const PanelHeader: React.FC<PropTypes> = ({
     const displayNumbers = hookState.displayNumbers.get()
     let Total = 0
     for (let curr of Currencies) {
-        Total += (balances ? (balances[curr.symbol] || 0) : 0) * marketInfo[curr.symbol].price
+        Total += (balances ? (Tools.balanceWrapper(balances[curr.symbol],curr.symbol) || 0) : 0) * marketInfo[curr.symbol].price
     }
     let BTC = Currencies.find(c => c.symbol === "BTC")
 
@@ -81,7 +81,7 @@ export const PanelHeader: React.FC<PropTypes> = ({
                 <View style={styles.calculatorRow}>
                     <Text style={styles.calculatorKey}>Amount</Text>
                     <Text
-                        style={styles.calculatorValue}>{`${Tools.formatNumber(balance, selectedCurrency.precision, displayNumbers)} ${selectedCurrency.symbol}`}</Text>
+                        style={styles.calculatorValue}>{`${Tools.formatNumber(Tools.balanceWrapper(balance,selectedCurrency.symbol), selectedCurrency.precision, displayNumbers)} ${selectedCurrency.symbol}`}</Text>
                 </View>
                 <View style={styles.calculatorRow}>
                     <Text style={styles.calculatorKey}>Price</Text>
@@ -92,7 +92,7 @@ export const PanelHeader: React.FC<PropTypes> = ({
                 <View style={styles.calculatorRow}>
                     <Text style={styles.calculatorKey}>Total</Text>
                     <Text
-                        style={styles.calculatorValue}>{`${Tools.formatNumber(currentMarket.price * balance, 2, displayNumbers)} $`}</Text>
+                        style={styles.calculatorValue}>{`${Tools.formatNumber(currentMarket.price * Tools.balanceWrapper(balance,selectedCurrency.symbol), 2, displayNumbers)} $`}</Text>
                 </View>
                 <View style={styles.buttonRow}>
                     <Button style={styles.transferButton} labelStyle={styles.transferButtonLabel}
@@ -237,12 +237,12 @@ const styles = StyleSheet.create({
     },
     calculatorKey: Typography.create({
         color: Theme.colors.Gray500,
-        fontSize: 14,
+        fontSize: 12,
         flex: 1,
     }),
     calculatorValue: Typography.create({
         color: Theme.colors.Gray500,
-        fontSize: 14,
+        fontSize: 12,
         flex: 2,
     }),
     buttonRow: {

@@ -11,6 +11,5 @@ marketRouter.get("/prices", async (req, res) => {
     }
     const Symbols = typeof symbols === "string" ? symbols.split(",") : []
     const prices = await getCryptoPrices(Symbols)
-    console.log({prices})
     return res.json({data: Object.fromEntries(prices.map(({symbol, price, change}) => [symbol, {price, change}]))})
 })

@@ -16,6 +16,8 @@
     "bip32": "^4.0.0",
     "bip39": "^3.1.0",
     "bitcoinjs-lib": "^6.1.0",
+    "bitcore-explorers": "^1.0.1",
+    "bitcore-lib": "^10.0.5",
     "dotenv": "^16.0.3",
     "ecpair": "^2.1.0",
     "ethereumjs-wallet": "^1.0.2",
@@ -25,6 +27,7 @@
     "validator": "^13.9.0"
   },
   "devDependencies": {
+    "@types/bitcore-lib": "^0.15.3",
     "@types/express": "^4.17.17",
     "@types/morgan": "^1.9.4",
     "@types/node": "^18.15.11",

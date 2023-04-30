@@ -1,5 +1,8 @@
 import {Currencies, SupportedSymbols} from "../../config/currencies";
-import {generateQuery} from "../index";
+import {generateMutation, generateQuery} from "../index";
+import {Alert, ToastAndroid} from "react-native";
+import {setStringAsync} from "expo-clipboard";
+import {logger} from "../../utils/logger";
 
 
 export const useCryptoAddresses = generateQuery<{ masterSeed: string, accountID?: number }, { data: { [key in SupportedSymbols]: string } }>({
@@ -8,7 +11,14 @@ export const useCryptoAddresses = generateQuery<{ masterSeed: string, accountID?
         method: "POST",
         path: "/wallet/address"
     },
-    queryOptions: {keepPreviousData: true,refetchOnWindowFocus:false,refetchOnReconnect:false,refetchOnMount:false,refetchIntervalInBackground:false,refetchInterval:false}
+    queryOptions: {
+        keepPreviousData: true,
+        refetchOnWindowFocus: false,
+        refetchOnReconnect: false,
+        refetchOnMount: false,
+        refetchIntervalInBackground: false,
+        refetchInterval: false
+    }
 })
 
 export const useCryptoPrivateKeys = generateQuery<{ masterSeed: string, accountID?: number }, { data: { [key in SupportedSymbols]: string } }>({
@@ -17,7 +27,14 @@ export const useCryptoPrivateKeys = generateQuery<{ masterSeed: string, accountI
         method: "POST",
         path: "/wallet/privateKey"
     },
-    queryOptions: {keepPreviousData: true,refetchOnWindowFocus:false,refetchOnReconnect:false,refetchOnMount:false,refetchIntervalInBackground:false,refetchInterval:false}
+    queryOptions: {
+        keepPreviousData: true,
+        refetchOnWindowFocus: false,
+        refetchOnReconnect: false,
+        refetchOnMount: false,
+        refetchIntervalInBackground: false,
+        refetchInterval: false
+    }
 })
 
 
@@ -39,7 +56,14 @@ export const useBalanceList = generateQuery<{ masterSeed, accountID }, { data: {
         method: "POST",
         path: "/wallet/balance/list",
     },
-    queryOptions: {keepPreviousData: true,refetchOnWindowFocus:false,refetchOnReconnect:false,refetchOnMount:false,refetchIntervalInBackground:false,refetchInterval:false}
+    queryOptions: {
+        keepPreviousData: true,
+        refetchOnWindowFocus: false,
+        refetchOnReconnect: false,
+        refetchOnMount: false,
+        refetchIntervalInBackground: false,
+        refetchInterval: false
+    }
 })
 
 export type marketPrices = {
@@ -57,5 +81,60 @@ export const useMarketPrices = generateQuery<undefined, {
         method: "GET",
         path: `/market/prices?symbols=${Currencies.map(i => i.symbol).join(",")}`,
     },
-    queryOptions: {keepPreviousData: true,refetchOnWindowFocus:false,refetchOnReconnect:false,refetchOnMount:false,refetchIntervalInBackground:false,refetchInterval:false}
+    queryOptions: {
+        keepPreviousData: true,
+        refetchOnWindowFocus: false,
+        refetchOnReconnect: false,
+        refetchOnMount: false,
+        refetchIntervalInBackground: false,
+        refetchInterval: false
+    }
+})
+
+
+export const useSubmitTransaction = generateMutation<{
+    fromAddress: string,
+    toAddress: string,
+    privateKey: string,
+    amount: number,
+    symbol: SupportedSymbols
+}, {
+    data: {
+        status: boolean,
+        hash: string,
+        fees: number
+        balance: number
+        message?: string
+    }
+}>({
+    mutationKey: "useSubmitTransaction",
+    axios: {
+        method: "POST",
+        path: `/wallet/transfer`,
+    },
+    mutationOptions: {
+        retry: false, onError: () => {
+            Alert.alert("Process failed", "The transaction did not work due to some issues. Try again later.")
+        },
+        onSuccess: (res) => {
+            if (res?.data?.status) {
+                const data = res.data
+                logger.log({data})
+                Alert.alert("Process successful", `Your assets have been transferred.\nFee:${data.fees}\nBalance:${data.balance}`
+                    , [{
+                        text: "Copy TX hash", style: "default", onPress: () => {
+                            setStringAsync(data.hash).then(result => result === true && ToastAndroid.show('Transaction Hash Copied!', ToastAndroid.SHORT))
+                        }
+                    }, {
+                        text: "Ok", style: "default"
+                    }])
+            } else {
+                const status = res?.data?.status
+                if (status === false) {
+                    Alert.alert("Process failed!", "" + res.data.message)
+                }
+
+            }
+        }
+    }
 })

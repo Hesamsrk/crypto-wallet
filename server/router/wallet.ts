@@ -1,6 +1,6 @@
 import express, {Request} from "express";
 import {getWallet, isValidEntropyForBip39} from "../modules/wallet/HDWallet";
-import {getTestnetBalance, transferBitcoinTestnet} from "../services/blockcypher";
+import {getTestnetBalanceSatoshi, sendTestnetTransaction} from "../services/blockcypher";
 import {isValidTestnetAddress} from "../modules/wallet/Testnet";
 
 export const walletRouter = express.Router()
@@ -53,7 +53,7 @@ walletRouter.post("/balance", async (req, res) => {
             if (!isValidTestnetAddress(address)) {
                 return res.status(400).json({error: `Address is not a valid ${symbol} address!`})
             }
-            balance = await getTestnetBalance(address)
+            balance = await getTestnetBalanceSatoshi(address)
             break
     }
     return res.json({data: balance})
@@ -73,7 +73,7 @@ walletRouter.post("/balance/list", async (req, res) => {
     const wallet = await getWallet(masterSeed, accountID || 0)
     return res.json({
         data: {
-            "TBTC": await getTestnetBalance(wallet.TBTC.address),
+            "TBTC": await getTestnetBalanceSatoshi(wallet.TBTC.address),
         }
     })
 })
@@ -82,7 +82,7 @@ walletRouter.post("/balance/list", async (req, res) => {
 walletRouter.post("/transfer", async (req, res) => {
     const supportedSymbols = ["TBTC"]
 
-    const {fromAddress, toAddress, symbol, amount, privateKey} = req.body || {}
+    const {fromAddress, toAddress, symbol, amount, privateKey,fee} = req.body || {}
     if (!fromAddress) {
         return res.status(400).json({error: "Body parameter not defined: fromAddress"})
     }
@@ -98,7 +98,6 @@ walletRouter.post("/transfer", async (req, res) => {
     if (!amount) {
         return res.status(400).json({error: "Body parameter not defined: amount"})
     }
-
     if (!supportedSymbols.includes(symbol)) {
         return res.status(400).json({error: "symbol is not supported!"})
     }
@@ -110,8 +109,12 @@ walletRouter.post("/transfer", async (req, res) => {
             if (!isValidTestnetAddress(toAddress)) {
                 return res.status(400).json({error: `toAddress is not a valid ${symbol} address!`})
             }
-            return res.json({data: await transferBitcoinTestnet({privateKey, fromAddress, toAddress, amount: +amount})})
+            try{
+                const response = await sendTestnetTransaction({privateKeyWIF:privateKey, fromAddress, toAddress, amountSatoshis:+amount})
+                return res.json({data:response })
+            }catch (e){
+                return res.status(500).json({error:"Failed to submit Testnet transaction."})
+            }
     }
-
+    res.status(404).json({error:"Symbol not found!"})
 })
-

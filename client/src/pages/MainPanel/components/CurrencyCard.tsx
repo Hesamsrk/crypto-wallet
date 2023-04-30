@@ -51,7 +51,7 @@ export const CurrencyCard: React.FC<PropTypes & ViewProps> = ({
             </Text>
             <View style={styles.amountContainer}>
                 <Text style={styles.amount}>
-                    {Tools.formatNumber(balance, Currency.precision, displayNumbers)}
+                    {Tools.formatNumber(Tools.balanceWrapper(balance,Currency.symbol), Currency.precision, displayNumbers)}
                 </Text>
                 <Text style={styles.symbol}>
                     {Currency.symbol}
@@ -92,7 +92,7 @@ const styles = StyleSheet.create({
     },
     selected: {
         borderColor: Theme.colors.Accent2,
-        borderWidth: 4,
+        borderWidth: 2,
     },
     disabled: {
         opacity: 0.4
