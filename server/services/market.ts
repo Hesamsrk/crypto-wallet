@@ -6,32 +6,28 @@ interface CryptoPrice {
     change: number;
 }
 
-export async function getCryptoPrices(symbols: string[]): Promise<CryptoPrice[]> {
+export type SupportedSymbols = "USDT" | "BTC" | "TBTC" | "ETH" | "BNB" | "TRX" | "DOGE"
+
+const IDlist: { [key in SupportedSymbols]: string } = {
+    BTC: "bitcoin",
+    ETH: "ethereum",
+    TRX: "tron",
+    TBTC: "tbtc",
+    BNB: "binancecoin",
+    DOGE: "dogecoin",
+    USDT: "tether",
+}
+
+export async function getCryptoPrices(symbols: SupportedSymbols[]): Promise<CryptoPrice[]> {
     const prices: CryptoPrice[] = [];
-    const ids: string[] = [];
 
-    // Get the CoinGecko IDs for the provided symbols
-    try {
-        const response = await axios.get('https://api.coingecko.com/api/v3/coins/list');
-        const coinList = response.data;
-        for (const symbol of symbols) {
-            const coin = coinList.find((c: any) => c.symbol.toLowerCase() === symbol.toLowerCase());
-            if (coin) {
-                ids.push(coin.id);
-            }
-        }
-    } catch (error) {
-        console.error('Error fetching coin list from CoinGecko', error);
-        return prices;
-    }
-
-    // Get the current prices and price change percentage for the provided IDs
     try {
         const response = await axios.get(`https://api.coingecko.com/api/v3/coins/markets`, {
             params: {
                 vs_currency: 'usd',
-                ids: ids.join(','),
+                ids: symbols.map(symbol => IDlist[symbol]).join(','),
             },
+            timeout: 5000
         });
         const coinPrices = response.data;
         for (const coinPrice of coinPrices) {
@@ -42,8 +38,8 @@ export async function getCryptoPrices(symbols: string[]): Promise<CryptoPrice[]>
                 change: priceChangePercent,
             });
         }
-    } catch (error) {
-        console.error('Error fetching coin prices from CoinGecko', error);
+    } catch (error: any) {
+        console.error(`Fetching prices from api.coingecko.com failed: status code ${error.code}`);
         return prices;
     }
 

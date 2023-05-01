@@ -3,6 +3,7 @@ import dotenv from 'dotenv';
 import {walletRouter} from "./router/wallet"
 import morgan from "morgan"
 import {marketRouter} from "./router/market";
+import {printConfigToConsole} from "./modules/printConfig";
 
 dotenv.config();
 const port = process.env.PORT || 9090;
@@ -30,4 +31,5 @@ app.use("/market", marketRouter)
 
 app.listen(port, () => {
     console.log(`⚡️[server]: Server is running at http://localhost:${port}`);
+    printConfigToConsole()
 }).setTimeout(10000);

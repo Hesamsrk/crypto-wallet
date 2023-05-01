@@ -11,14 +11,7 @@ export const useCryptoAddresses = generateQuery<{ masterSeed: string, accountID?
         method: "POST",
         path: "/wallet/address"
     },
-    queryOptions: {
-        keepPreviousData: true,
-        refetchOnWindowFocus: false,
-        refetchOnReconnect: false,
-        refetchOnMount: false,
-        refetchIntervalInBackground: false,
-        refetchInterval: false
-    }
+    queryOptions: {keepPreviousData: false}
 })
 
 export const useCryptoPrivateKeys = generateQuery<{ masterSeed: string, accountID?: number }, { data: { [key in SupportedSymbols]: string } }>({
@@ -27,14 +20,7 @@ export const useCryptoPrivateKeys = generateQuery<{ masterSeed: string, accountI
         method: "POST",
         path: "/wallet/privateKey"
     },
-    queryOptions: {
-        keepPreviousData: true,
-        refetchOnWindowFocus: false,
-        refetchOnReconnect: false,
-        refetchOnMount: false,
-        refetchIntervalInBackground: false,
-        refetchInterval: false
-    }
+    queryOptions: {keepPreviousData: false}
 })
 
 
@@ -57,7 +43,7 @@ export const useBalanceList = generateQuery<{ masterSeed, accountID }, { data: {
         path: "/wallet/balance/list",
     },
     queryOptions: {
-        keepPreviousData: true,
+        keepPreviousData: false,
         refetchOnWindowFocus: false,
         refetchOnReconnect: false,
         refetchOnMount: false,
