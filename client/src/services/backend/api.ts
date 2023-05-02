@@ -11,7 +11,14 @@ export const useCryptoAddresses = generateQuery<{ masterSeed: string, accountID?
         method: "POST",
         path: "/wallet/address"
     },
-    queryOptions: {keepPreviousData: false}
+    queryOptions: {
+        keepPreviousData: false,
+        refetchOnWindowFocus: false,
+        refetchOnReconnect: false,
+        refetchOnMount: false,
+        refetchIntervalInBackground: false,
+        refetchInterval: false
+    }
 })
 
 export const useCryptoPrivateKeys = generateQuery<{ masterSeed: string, accountID?: number }, { data: { [key in SupportedSymbols]: string } }>({
@@ -20,8 +27,32 @@ export const useCryptoPrivateKeys = generateQuery<{ masterSeed: string, accountI
         method: "POST",
         path: "/wallet/privateKey"
     },
-    queryOptions: {keepPreviousData: false}
+    queryOptions: {
+        keepPreviousData: false,
+        refetchOnWindowFocus: false,
+        refetchOnReconnect: false,
+        refetchOnMount: false,
+        refetchIntervalInBackground: false,
+        refetchInterval: false
+    }
 })
+
+export const useMnemonic = generateQuery<{ masterSeed: string }, { data: string[] }>({
+    queryKey: "useMnemonic",
+    axios: {
+        method: "POST",
+        path: "/wallet/mnemonic"
+    },
+    queryOptions: {
+        keepPreviousData: false,
+        refetchOnWindowFocus: false,
+        refetchOnReconnect: false,
+        refetchOnMount: false,
+        refetchIntervalInBackground: false,
+        refetchInterval: false
+    }
+})
+
 
 
 export const usePing = generateQuery<undefined, boolean>({
@@ -76,6 +107,8 @@ export const useMarketPrices = generateQuery<undefined, {
         refetchInterval: false
     }
 })
+
+
 
 
 export const useSubmitTransaction = generateMutation<{

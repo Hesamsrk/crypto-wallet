@@ -9,7 +9,7 @@ import {
     useBalanceList,
     useCryptoAddresses,
     useCryptoPrivateKeys,
-    useMarketPrices,
+    useMarketPrices, useMnemonic,
     usePing
 } from "../../services/backend/api";
 import {useHookstate} from "@hookstate/core";
@@ -21,10 +21,14 @@ import {backendClient} from "../../services/backend/client";
 import {NetworkModal} from "./components/NetworkModal";
 import {logger} from "../../utils/logger";
 import {Counter} from "../../components/UI/Counter";
+import {MnemonicModal} from "./components/MnemonicModal";
+import {Button, Chip} from "@react-native-material/core";
+import {Theme} from "../../styles/theme";
 
 export const MainPanel = Page(() => {
     const hookState = useHookstate(Store)
     const backend = hookState.backend.get()
+    const networkStatus = hookState.networkStatus.get()
     const privateKey = hookState.privateKey.get()
     const accountID = hookState.accountID.get()
     const [selectedCurrency, setSelectedCurrency] = useState<string>(Currencies[0].symbol)
@@ -43,6 +47,14 @@ export const MainPanel = Page(() => {
         isRefetching: privateKeysIsRefetching
     } = useCryptoPrivateKeys({
         instance: backendClient(backend), variables: {masterSeed: privateKey, accountID}
+    })
+
+    const {
+        data: mnemonic,
+        refetch: refetchMnemonic,
+        isRefetching: mnemonicIsRefetching
+    } = useMnemonic({
+        instance: backendClient(backend), variables: {masterSeed: privateKey}
     })
 
 
@@ -66,16 +78,16 @@ export const MainPanel = Page(() => {
         instance: backendClient(backend)
     })
 
-    const [openModal, setOpenModal] = useState<"close" | "Receive" | "Send" | "Network">("close")
-    const networkStatus = hookState.networkStatus.get()
+    const [openModal, setOpenModal] = useState<"close" | "Receive" | "Send" | "Network" | "Mnemonics">("close")
 
     const refetchRequests = async () => {
         await refetchAddresses()
         await refetchBalances()
         await refetchMarketPrices()
         await refetchPrivateKeys()
+        await refetchMnemonic()
     }
-    const loading = marketPricesIsRefetching || balancesIsRefetching || cryptoAddressesIsRefetching || privateKeysIsRefetching
+    const loading = networkStatus==="connected" ? (marketPricesIsRefetching || balancesIsRefetching || cryptoAddressesIsRefetching || privateKeysIsRefetching) || mnemonicIsRefetching : false
 
     return <>
         <Spinner visible={networkStatus === "connecting" || loading}/>
@@ -90,6 +102,8 @@ export const MainPanel = Page(() => {
                                             selectedCurrency={selectedCurrency} balances={balances?.data}/>}
         {openModal === "Network" &&
         <NetworkModal onClose={() => setOpenModal("close")} open={openModal === "Network"}/>}
+        {openModal === "Mnemonics" &&
+        <MnemonicModal onClose={() => setOpenModal("close")} open={openModal === "Mnemonics"} data={mnemonic?.data || []}/>}
 
         <PanelHeader onShowNetworkStatus={() => setOpenModal("Network")} currency={selectedCurrencyBody}
                      balances={balances?.data} onRefresh={() => {
@@ -97,12 +111,15 @@ export const MainPanel = Page(() => {
         }} onReceiveClick={() => setOpenModal("Receive")}
                      onSendClick={() => setOpenModal("Send")} market={marketPrices?.data}/>
         <ScrollView contentContainerStyle={styles.contentContainer}>
-            <Counter label={"Wallet ID"} minimum={0} maximum={9} onChange={(val) => {
-                hookState.accountID.set(val)
-                setTimeout(() => {
-                    refetchRequests().then(r => Alert.alert("Done", "New wallet loaded!"))
-                }, 500)
-            }}/>
+            <View style={styles.topBar}>
+                <Chip variant={"outlined"} style={{backgroundColor:Theme.colors.Primary400}} color={Theme.colors.Gray600} label={"Mnemonic"} onPress={()=>setOpenModal("Mnemonics")} />
+                <Counter label={"Wallet ID"} minimum={0} maximum={9} onChange={(val) => {
+                    hookState.accountID.set(val)
+                    setTimeout(() => {
+                        refetchRequests().then(r => Alert.alert("Done", "New wallet loaded!"))
+                    }, 500)
+                }}/>
+            </View>
             <View style={{width: "100%"}}><Text style={styles.title}>Cryptocurrencies</Text></View>
             {
                 Currencies.map(currency => <CurrencyCard selected={currency.symbol === selectedCurrency}
@@ -140,5 +157,14 @@ const styles = StyleSheet.create({
         fontSize: 18,
         margin: 5,
         marginHorizontal: 10
-    })
+    }),
+    topBar:{
+        flexDirection:"row",
+        alignItems:"center",
+        width:"100%",
+        justifyContent:"space-between",
+        marginVertical:10,
+        borderBottomColor:Theme.colors.Primary600,
+        borderBottomWidth:1
+    }
 })

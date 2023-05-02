@@ -1,5 +1,5 @@
 import express, {Request} from "express";
-import {getWallet, isValidEntropyForBip39} from "../modules/wallet/HDWallet";
+import {getMnemonic, getWallet, isValidEntropyForBip39} from "../modules/wallet/HDWallet";
 import {getTestnetBalanceSatoshi, sendTestnetTransaction} from "../services/blockcypher";
 import {isValidTestnetAddress} from "../modules/wallet/Testnet";
 
@@ -16,6 +16,20 @@ walletRouter.post("/address", async (req: Request<undefined, { error: string } |
     }
     const wallet = await getWallet(masterSeed, accountID || 0)
     return res.status(200).json({data: Object.fromEntries(Object.entries(wallet).map(([key, {address}]) => ([key, address])))})
+})
+
+
+walletRouter.post("/mnemonic", async (req: Request<undefined, { error: string } | { data: string[] }, { masterSeed: string }, undefined>, res) => {
+    const {masterSeed} = req.body || {}
+    if (!masterSeed) {
+        return res.status(400).json({error: "Body parameter not defined: masterSeed"})
+    } else {
+        if (!isValidEntropyForBip39(masterSeed)) {
+            return res.status(400).json({error: "MasterSeed is not a valid entropy!"})
+        }
+    }
+    const mnemonic = await getMnemonic(masterSeed)
+    return res.status(200).json({data: mnemonic})
 })
 
 walletRouter.post("/privateKey", async (req: Request<undefined, { error: string } | { data: { [key: string]: string } }, { masterSeed: string, accountID: number }, undefined>, res) => {

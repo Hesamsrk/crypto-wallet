@@ -22,6 +22,13 @@ export const getHDWalletNodes = async (masterSeed: string, accountID: number = 0
     return {Master, Bitcoin, Ethereum, Testnet}
 }
 
+
+export const getMnemonic = async (masterSeed: string):Promise<string[]> => {
+    const entropy = Buffer.from(masterSeed, 'base64');
+    return bip39.entropyToMnemonic(entropy).split(" ")
+}
+
+
 export interface KeyPair {
     privateKey: string
     address: string
